@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0,viewport-fit=cover">
+    <title>设计札记（8）| 过早优化是万恶之源</title>
+    <link rel="stylesheet" href="./assets/17721690188270.38283659824802074.css">
+<link rel="stylesheet" href="./assets/17721690188300.7566122162362869.css">
+<link rel="stylesheet" href="./assets/17721690188330.8298235578661167.css">
+<link rel="stylesheet" href="./assets/17721690188360.7075552522941334.css">
+<link rel="stylesheet" href="./assets/17721690188390.4906156534964137.css">
+<link rel="stylesheet" href="./assets/17721690188430.494966539901467.css">
+<link rel="stylesheet" href="./assets/17721690188460.34039218998224197.css">
+<link rel="stylesheet" href="./assets/17721690188490.4158607395508218.css">
+<link rel="stylesheet" href="./assets/17721690188520.47601958616252793.css">
+<link rel="stylesheet" href="./assets/17721690188560.3791042129893676.css">
+<link rel="stylesheet" href="./assets/17721690188590.3482294613367757.css">
+<link rel="stylesheet" href="./assets/17721690188620.3527096883383296.css">
+<link rel="stylesheet" href="./assets/17721690188650.8758768882036811.css">
+<link rel="stylesheet" href="./assets/17721690188690.9576798152480198.css">
+<link rel="stylesheet" href="./assets/17721690188720.3615779688722047.css">
+<link rel="stylesheet" href="./assets/17721690188740.3479269828307846.css">
+<link rel="stylesheet" href="./assets/17721690188770.9598875022087456.css">
+<link rel="stylesheet" href="./assets/17721690188800.28103128694150026.css">
+<link rel="stylesheet" href="./assets/17721690188830.47500671835685393.css">
+
+    <style>
+        #page-content,
+        #js_article_bottom_bar,
+        .__page_content__ {
+            max-width: 667px;
+            margin: 0 auto;
+        }
+        img {
+            max-width: 100%;
+        }
+        .sns_opr_btn::before {
+            width: 16px;
+            height: 16px;
+            margin-right: 3px;
+        }
+    </style>
+</head>
+<body class="zh_CN wx_wap_page 
+
+                                            wx_wap_desktop_fontsize_2    mm_appmsg
+ comment_feature
+ discuss_tab appmsg_skin_default appmsg_style_default ">
+<div id="js_article" style="position:relative;" class="rich_media">
+  
+  
+  
+  <div id="js_base_container" class="rich_media_inner">
+    
+    
+    
+<div class="wx_row_immersive_stream_wrap" id="js_row_immersive_stream_wrap">
+  
+    <div id="js_row_immersive_cover_img">
+    <img src="./assets/17721690188100.20823464949865966.jpg" alt="cover_image" class="wx_follow_avatar_pic">
+  </div>
+    <div id="js_row_immersive_stream_mask" class="wx_row_immersive_stream_mask"></div>
+</div>
+
+    
+    <div id="page-content" class="rich_media_area_primary" style="">
+      <div class="rich_media_area_primary_inner">
+        
+        
+        
+        
+        
+        
+                
+        
+
+        <div id="img-content" class="rich_media_wrp">
+          
+          <h1 class="rich_media_title " id="activity-name">
+<span class="js_title_inner">设计札记（8）| 过早优化是万恶之源</span></h1>
+          <div id="meta_content" class="rich_media_meta_list">
+                                      <span id="copyright_logo" class="wx_tap_link js_wx_tap_highlight rich_media_meta icon_appmsg_tag appmsg_title_tag weui-wa-hotarea">原创</span>
+                                                      <span class="rich_media_meta rich_media_meta_text">
+                                                                                    <span role="link" tabindex="0" id="js_author_name" class="wx_tap_link js_wx_tap_highlight rich_media_meta_link weui-wa-hotarea" datarewardsn="" datatimestamp="" datacanreward="0">籽言</span>
+                        <span style="display: none;" id="js_author_name_text">籽言</span>
+                                                                            </span>
+                                      
+                                                                <span class="rich_media_meta rich_media_meta_nickname" id="profileBt">
+              <a href="javascript:void(0);" class="wx_tap_link js_wx_tap_highlight weui-wa-hotarea" id="js_name">
+                寻常              </a>
+              
+              <div id="js_profile_card"></div>
+            </span>
+            
+            <span id="meta_content_hide_info" class="">
+              <em id="publish_time" class="rich_media_meta rich_media_meta_text">2021年11月30日 17:04</em>
+              <em id="js_ip_wording_wrp" class="rich_media_meta rich_media_meta_text" style="display: none;"><span id="js_a11y_op_ip_wording" aria-hidden="true"></span><span aria-hidden="true" id="js_ip_wording"></span></em>
+              <em id="js_title_modify_wrp" class="rich_media_meta rich_media_meta_text" role="option" aria-labelledby="js_a11y_op_title_modify js_title_modify" style="display: none;"><span aria-hidden="true" id="js_title_modify"></span></em>
+                            <span id="js_star" role="link" tabindex="0" class="wx_tap_link js_wx_tap_highlight rich_media_meta rich_media_meta_link rich_media_meta_star" style="display: none;"></span>
+            </span>
+            
+          </div>
+
+
+          
+          <div id="js_novel_card" class="novel-card js_wx_tap_highlight wx_tap_card" style="display: none;">
+            <div class="novel-info">
+              <div class="novel-cover-group">
+                <div id="js_novel_cover" class="novel-cover">
+                  <img>
+                </div>
+                <div class="novel-meta">
+                  <div id="js_novel_title" class="novel-title"></div>
+                  <div id="js_novel_description" class="novel-description">在小说阅读器中沉浸阅读</div>
+                </div>
+              </div>
+            </div>
+            <div class="arrow-jump-icon"></div>
+          </div>
+
+          
+          
+          
+            
+              
+              
+            
+              
+              
+                
+              
+            
+          
+
+          
+          
+
+          
+                                        
+
+          
+                    
+
+          
+                    
+                    
+          
+          
+          
+          
+          
+                                                            <div class="rich_media_content js_underline_content
+                       " id="js_content"><p style="text-align: center;"><img class="rich_pages wxw-img js_insertlocalimg" data-fileid="510869392" data-ratio="0.5633333333333334" data-s="300,640" data-src="https://mmbiz.qpic.cn/mmbiz_jpg/IahiciaXSrStBTXRE5lks6IialYTCgHoPH8MtAmEFR3ISunhJwibM5uXxgG4I3fRPicibDeymVWJn8oJbu8OO0XpMkLw/640?wx_fmt=jpeg" data-type="jpeg" data-w="600" style="" src="./assets/17721690188160.7165587312117958.jpg"></p><p><br></p><p><span style="font-size: 16px;">周末出门散步，看到有人拿着画板在写生，就想起了本科时候的美术课。</span><span style="font-size: 16px;">我们当年也是这样用纸笔来记录和表达。</span><span style="font-size: 16px;">现在大家太过于依赖计算机，不仅不会画，连字都写不好了。</span></p><p><span style="font-size: 16px;"><br></span></p><p><span style="font-size: 16px;">画画的具体技法我差不多都还给了老师，但有一点印象特别深刻，就是他们反复讲的：“<strong>不管是速写、素描还是水彩，在任何时候停笔，都应该是一副完整的作品。</strong>”这句话我琢磨了很久，既是在强调全局观的重要性，也是在提醒大家不要过早把某个局部画的太深入，否则后面就很难调整了。</span></p><p><br></p><p><span style="font-size: 16px;">画画是这样，在建筑设计上，由“过早优化”引发的问题更是数不胜数。我记得有一次上设计课，那门课还处在方案推敲阶段，但同学们私底下多多少少都有较劲，想比其他人做的更多，更好，脱颖而出。有人连夜赶了好几个方案，有人花大价钱用激光打印木板，拼出了特别规整的模型，有人甚至连窗户的花样都精心做了镂空。课前同学们一边讨论，一边忍不住商业互吹。后来上课的时候，大家并没有如愿获得老师的赞扬，而是被批评了。为什么？因为我们过于注重成果的细节展现，把很多不是这时候该考虑的问题想得过多，而本来应该在方案推敲阶段进行的思考却几乎没有。那些精心设计的窗户，最终被评价为“奇技淫巧”。我们被问了这样一个问题：“现在都已经把窗户分隔做好了。你们后面这一个学期准备做什么，方案改还是不改？”</span></p><p><span style="font-size: 16px;"><strong><br></strong></span></p><p><span style="font-size: 16px;"><strong>后</strong><strong>来我想明白了，设计应该一层一层做，而不是一块一块做。</strong>在建筑本身的空间逻辑和建造方式都不清楚的情况下，过度深化一个窗户，只能是浪费时间。因为随着方案的推进，这些细节肯定是要推翻重来的。</span></p><p><br></p><p><span style="font-size: 16px;">明白归明白，要落实到行动上很难，可能人的本性就是急于看到成果。工作以后，我推敲模型还总觉得白模的设计深度太浅，所以往往在体块还没有完善时，就忍不住分出玻璃面，加立面杆件，让设计看起来完成度更高，工作量更大，心里才踏实。但是这些加入的零碎内容除了干扰体块判断，影响后期修改，浪费当下时间之外，也没有其他作用了。</span></p><p><br></p><p><span style="font-size: 16px;">后来我发现，在计算机编程领域也存在同样的问题。著名的计算机科学家，经典巨著《计算机编程艺术》的作者Donald Knuth就说过：“<strong>过早优化是万恶之源</strong>（We should forget about small efficiencies, say about 97% of the time, premature optimization is the root of all evil)。” 这句话被大家称为“克努特优化原则”。</span><span style="font-size: 16px;">在软件开发过程中，整个框架会反复调整。</span><span style="font-size: 16px;">如果你过早优化一个分支，很可能在下次调整的时候这个分支就被抛弃了。</span><span style="font-size: 16px;">那么铺在该分支上的时间和精力就都没有意义了。</span></p><p><br></p><p><span style="font-size: 16px;">埃里克.莱斯在《精益创业》中也说，“<strong>成功的执行一项无意义的计划是导致失败的致命原因，如果企业费劲心思开发出来的产品没人想要，那么是否按时、按预算完成计划也就无关紧要了</strong>。”虽然他强调的是前期判断的重要性，但也蕴含着“不要过早优化”警示。</span></p><p><br></p><p><span style="font-size: 16px;">人们在不自知的情况下做出的过早优化，可以通过更新认知来避免，但还有一种“过早优化”是明知道这样做不对，没有意义，但由于外部环境的逼迫，还是会去做，则更为可悲。比如把国内很多设计院的汇报文本跟国外事务所的放在一起比，就发现在“卷”的大环境下，国内公司更喜欢堆砌工作量，往往把文本做的很厚，图渲的很多，甚至还没拿地，连施工图都做好了。但是却没有抓住设计的核心，更没有抓住甲方爸爸的心。这样非常容易被人牵着鼻子走，反复修改直到项目工期来不及，之前无数轮的施工图也都是浪费时间，更关键的是还不算产值。设计院想这样做吗？应该是不想的。但是在项目越来越少，竞争对手越来越多，大家实力差距并不大，设计评价体系又比较混乱的情况下，以更多的工作量来证明自己性价比更高，似乎是最容易做到的办法了。反正员工又不是按时计费的，为什么不让大家多做一点呢……</span></p><p><br></p><p><span style="font-size: 16px;">唉，又扯远了。再回到设计中“过早优化”问题上来。</span></p><p><br></p><p><strong><span style="font-size: 16px;">所有的设计在底层逻辑上都是相同的，和人生的根本原则也是相通的。</span></strong><span style="font-size: 16px;">一个学生在还没有领悟到数学的逻辑之美时就被迫做了大量脱离生活实际的数学题，那他这辈子也成不了一个优秀的数学人才，更不要说伟大的数学家了。一个孩子在幼儿园的时候就学完小学课程，在小学就学完中学课程，中学就能跟大学生一起谈笑风生，听起来很厉害，但对于他来说，可能是一种真正的灾难。<strong>因为在求学初期，最应该做的不是去收集更多的知识，而是找到一个合适自己的方向。人生如果方向性的问题没有解决，那么后面所有的聪明和努力，都是没有根基的，也永远不可能达到真正的高度。</strong></span></p><p><span style="font-size: 16px;"><strong><br></strong></span></p><p><span style="font-size: 16px;">看看身边的亲朋好友，在“不能输在起跑线上”的大环境下，有多少家长能忍住不“过早优化”自己的孩子呢？<strong><br></strong></span></p><p><span style="font-size: 16px;"><strong><br></strong></span></p><p><span style="font-size: 16px;"><strong><br></strong></span></p><p style="text-align: right;"><span style="font-size: 16px;">2021年11月30日</span></p><p style="text-align: right;"><span style="font-size: 16px;">完笔于上海</span></p><p style="text-align: right;"><span style="font-size: 16px;"><br></span></p><p style="text-align: right;"><span style="font-size: 16px;"><br></span></p><p style="text-align: left;"><span style="font-size: 16px;">PS：跟建筑设计相关的往期回顾（工作期间）<br></span></p><p style="text-align: left;"><span style="font-size: 16px;"><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658353034&amp;idx=1&amp;sn=3ebe9ce075bb3c0713053d195146918e&amp;chksm=84730a9db304838b8df2187e235825b10246b4aa61a3459593edd5bfd0a514d585dd8334d887&amp;scene=21#wechat_redirect" textvalue="设计札记（7）| 渡过漫长的困难时光" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">设计札记（7）| 渡过漫长的困难时光</a><br></span></p><p style="text-align: left;"><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658353011&amp;idx=1&amp;sn=ac128ad18bb94033225a429172bdfc03&amp;chksm=84730a64b304837225b63d4c542e6af9f6e2c4bfa135cecc7e7f8ca4934987da2f2f4570cbc1&amp;scene=21#wechat_redirect" textvalue="设计札记（6）| 入职一周年随记" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">设计札记（6）| 入职一周年随记</a><br></p><p style="text-align: left;"><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658352974&amp;idx=1&amp;sn=131e0998430bbe8ad8aa93a8cfcb293e&amp;chksm=84730a59b304834f1281787d54dca809647e280c7f191abfe1869bdbc28782569ad0c11c4ea3&amp;scene=21#wechat_redirect" textvalue="设计札记（5）| 如何不让自己在工作中崩溃" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">设计札记（5）| 如何不让自己在工作中崩溃</a><br></p><p style="text-align: left;"><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658352961&amp;idx=1&amp;sn=edc95a5a9b2454d39a3faa9fe30387bd&amp;chksm=84730a56b3048340fdf3ead0fc7248287d18edcbb3e8c948f8f4ff73d86fb42d8a5a6c91a952&amp;scene=21#wechat_redirect" textvalue="设计札记（4）| 半年工作复盘" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">设计札记（4）| 半年工作复盘</a><br></p><p style="text-align: left;"><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658352931&amp;idx=1&amp;sn=458fd5f3e17b78aeed411060fb766b75&amp;chksm=84730a34b304832256991a321156379bc887698535ff416333979b8cad357ecc2cfd87c65597&amp;scene=21#wechat_redirect" textvalue="设计札记（3）| 10月，11月复盘" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">设计札记（3）| 10月，11月复盘</a><br></p><p style="text-align: left;"><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658352915&amp;idx=1&amp;sn=e58a8a372aa42de5a18c890968012a4c&amp;chksm=84730a04b3048312b4ce897c8a1d825a9019e9ccb85174476df1a431ca43b09a5e474ccaacfa&amp;scene=21#wechat_redirect" textvalue="设计札记（2）| 7、8、9月复盘" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">设计札记（2）| 7、8、9月复盘</a></p><p style="text-align: left;"><span style="color:#576b95;"><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658352906&amp;idx=1&amp;sn=b04b5cf058853e464b74663922f0e1af&amp;chksm=84730a1db304830bf97239c70378b4df52a56b8aabd4b2526eca84cd456e1b9a8f01c34e28b2&amp;scene=21#wechat_redirect" textvalue="设计札记（1）|  初入职场" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">设计札记（1）| &nbsp;初入职场</a><br></span><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658352915&amp;idx=1&amp;sn=e58a8a372aa42de5a18c890968012a4c&amp;chksm=84730a04b3048312b4ce897c8a1d825a9019e9ccb85174476df1a431ca43b09a5e474ccaacfa&amp;scene=21#wechat_redirect" textvalue="设计札记（2）| 7、8、9月复盘" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2"></a><br></p><p style="text-align: left;"><br></p><p style="text-align: left;"><span style="font-size: 16px;text-align: left;">PS</span><span style="font-size: 16px;text-align: left;">：</span><span style="font-size: 16px;text-align: left;">跟城市设计相关的往期回顾（同济读研期间）</span></p><p><span style="font-size: 16px;"><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658352883&amp;idx=1&amp;sn=fa6f6a1fcde1cb039995ca9a52e68662&amp;chksm=84730be4b30482f247d81e4db96cb373757c4c98845620f2bca7a84b8fbe7a1ec3b430300f04&amp;scene=21#wechat_redirect" textvalue="城市设计札记（14）| 给Envi-met的几点建议" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">城市设计札记（14）| 给Envi-met的几点建议</a><br></span></p><p><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658352698&amp;idx=1&amp;sn=84aac186599ae61562e08498754c8ec3&amp;chksm=84730b2db304823b08e02cd84d9fbc3bc57d983f9b107f0f2cbef8241521865a71a70464e757&amp;scene=21#wechat_redirect" textvalue="城市设计札记（13） | 回归建筑设计" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">城市设计札记（13） | 回归建筑设计</a><br></p><p><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658352852&amp;idx=1&amp;sn=79b89582764c3e355a127257cb2d3b08&amp;chksm=84730bc3b30482d57ff5c8cda0049b04b0eed0b4df0bf57753bca672e5385fa2665e1b0e1863&amp;scene=21#wechat_redirect" textvalue="城市设计札记（12）| 论文终究要好好写完" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">城市设计札记（12）| 论文终究要好好写完</a><br></p><p><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658352805&amp;idx=1&amp;sn=c8ddd6eac1f89acd38cd1ab393462b4f&amp;chksm=84730bb2b30482a42842af976cc0959c7766d3d9f7c803fc73b0dd9577802b2b394b72b068e5&amp;scene=21#wechat_redirect" textvalue="城市设计札记（11）——ENVI-met使用小结" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">城市设计札记（11）——ENVI-met使用小结</a><br></p><p><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658352557&amp;idx=1&amp;sn=1bb655fcbcc18a47313a1e7bba468e61&amp;chksm=847308bab30481ac62378801157874cd4013ece699f5858057199d6e7809d3c1c9cc54074e36&amp;scene=21#wechat_redirect" textvalue="城市设计札记（10）| 关于ArcGIS" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">城市设计札记（10）| 关于ArcGIS</a><br></p><p><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658352465&amp;idx=1&amp;sn=bb937060381b7e1d0518ca09a7a0ffe5&amp;chksm=84730846b3048150bc3222ddd28a1d5ebc1fce028adad0dff14701a885472374dcb09a436015&amp;scene=21#wechat_redirect" textvalue="城市设计札记（9）| 分析与设计，什么关系？" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">城市设计札记（9）| 分析与设计，什么关系？</a><br></p><p><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658352446&amp;idx=1&amp;sn=dd26fe8ed17368d25a31c5c965ac123a&amp;chksm=84730829b304813fc691b476f67d41a4d3671e56cc72d346f8d7ba1dce7f4a16778e6fb80586&amp;scene=21#wechat_redirect" textvalue="城市设计札记（8）| 再谈研究生论文写作" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">城市设计札记（8）| 再谈研究生论文写作</a><br></p><p><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658352432&amp;idx=1&amp;sn=9e97ce3999b43bb97b6da0e40c61dd9d&amp;chksm=84730827b30481310c1b1db0846edb078709839113a9ed9a3c80c68571cce9af33ea900988fc&amp;scene=21#wechat_redirect" textvalue="城市设计札记（7）| 旁听一场论文答辩" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">城市设计札记（7）| 旁听一场论文答辩</a><br></p><p><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658352424&amp;idx=1&amp;sn=9e1c97a83f37e0599b17792eacefee19&amp;chksm=8473083fb30481296555bd223bf5af744a888881294e8a0fa8156f2473c42e940b0dcd38787a&amp;scene=21#wechat_redirect" textvalue="城市设计札记（6）|《城市营造——21世纪城市设计的九项原则》" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">城市设计札记（6）|《城市营造——21世纪城市设计的九项原则》</a><br></p><p><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658352305&amp;idx=1&amp;sn=f9cb4c20b60cfb211d009680dbb4ca6d&amp;chksm=847309a6b30480b0edfc83b8a26cc85b22f5de41f59ef4ab5d9685026b465e854595b8a1e710&amp;scene=21#wechat_redirect" textvalue="城市设计札记（5）——写论文这件事" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">城市设计札记（5）——写论文这件事</a><br></p><p><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658352231&amp;idx=1&amp;sn=50fb63c0730fdbba3a89d302bae47120&amp;chksm=84730970b30480665dd08258fe046cdbd14da1dc856ec0dd1caef21ed1a5d91dcfe418a03552&amp;scene=21#wechat_redirect" textvalue="城市设计札记（4）——记一场有启发的讲座" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">城市设计札记（4）——记一场有启发的讲座</a><br></p><p><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658352225&amp;idx=1&amp;sn=a9dc6ff1373271514c9dd441cd87f731&amp;chksm=84730976b30480607447a849ed3e089b4560975e5b71e0433df84d90515c11f1e5ac45d1639c&amp;scene=21#wechat_redirect" textvalue="城市设计札记（3）——软件到底学多少才够用？" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">城市设计札记（3）——软件到底学多少才够用？</a><br></p><p><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658352167&amp;idx=1&amp;sn=97604358f32262ebab9bba97a6456ea2&amp;chksm=84730930b3048026aa0096fc18343c06d8145d41a77d7e6bd3206959616b90c8ee33bf2432bd&amp;scene=21#wechat_redirect" textvalue="城市设计札记（2）——初遇城市设计项目" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">城市设计札记（2）——初遇城市设计项目</a><br></p><p><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658352066&amp;idx=1&amp;sn=96a84d6ce6d8e5e7b838141be556c356&amp;chksm=84730ed5b30487c3c2694349b31503595158483ec076baf647b71d8171df0962bd92ad9f3e15&amp;scene=21#wechat_redirect" textvalue="城市设计札记（1）——空间句法备忘录" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">城市设计札记（1）——空间句法备忘录</a><br></p><p><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658352714&amp;idx=1&amp;sn=7297950179892bdb878d60ab1f7ebdba&amp;chksm=84730b5db304824b6d849138067d80570e2e902e567694fcaee6e0ca5e8270bd4075431dd8ce&amp;scene=21#wechat_redirect" textvalue="随笔 | 漫谈“师门”" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">随笔 | 漫谈“师门”</a><br></p><p><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658351556&amp;idx=1&amp;sn=2fde966374a3498b9d94cb1969edafd1&amp;chksm=84730cd3b30485c55d35a7f57e8e544a5d30a578d363d186f23768bddba314c9cc00cd1c7547&amp;scene=21#wechat_redirect" textvalue="关于“研究生”的碎笔闲言（一）" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">关于“研究生”的碎笔闲言（一）</a><br></p><p><a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzA4MzU1OTU0NA==&amp;mid=2658351514&amp;idx=1&amp;sn=25486abe9097de12411c4f79c5522773&amp;chksm=84730c8db304859b606bb068996fd6f2afdcc3b90ac2bd1a4ba3a5f0a5e71a5165c390d3f0c3&amp;scene=21#wechat_redirect" textvalue="天赋不够，如何做合格的设计?" linktype="text" imgurl="" imgdata="null" data-itemshowtype="0" tab="innerlink" data-linktype="2">天赋不够，如何做合格的设计?</a><br></p><p><br></p></div>
+          
+        </div>
+                        
+                
+        
+        
+         <div id="font_pannel_area"></div>
+        
+        
+
+        
+        <div id="js_temp_bottom_area" class="rich_media_tool_area">
+          
+<div class="rich_media_tool__wrp">
+    <div class="rich_media_tool">
+    
+                  <div class="rich_media_info weui-flex ">
+      
+            
+            
+          </div>
+  </div>
+  </div>
+
+        </div>
+
+
+                
+              </div>
+    </div>
+
+    <div class="rich_media_area_primary sougou" id="sg_tj" style="display:none"></div>
+
+    
+    <div class="rich_media_area_extra">
+      <div class="rich_media_area_extra_inner">
+        
+        <div id="page_bottom_area"></div>
+      </div>
+    </div>
+
+    
+    
+  </div>
+
+  
+  
+
+
+
+</div>
+<div id="js_article_bottom_bar" class="bottom_bar_wrp js_temp_bottom_bar">
+      <div id="article_bottom_bar_area"></div>
+    </div>
+
+<!-- 评论数据 -->
+
+</body>
+</html>

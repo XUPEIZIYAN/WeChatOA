@@ -1,0 +1,1920 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>寻常 公众号文章备份</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23ffffff'/><text x='16' y='23' font-size='18' font-family='serif' text-anchor='middle' fill='%23a07820'>寻</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+
+:root {
+  --bg: #08080a;
+  --s1: #0e0e12;
+  --border: #1c1c24;
+  --border2: #262630;
+  --tx: #dddde8;
+  --tx2: #b0b0c8;
+  --tx3: #7878a0;
+  --accent: #c9a84c;
+  --accent2: #a8892e;
+  --hover: #131318;
+  --tag-bg: #181822;
+  --tag-tx: #c0c0d8;
+  --orig: #5ec482;
+}
+
+body.light {
+  --bg: #faf9f5;
+  --s1: #f0efe9;
+  --border: #dddcd4;
+  --border2: #c8c7be;
+  --tx: #1c1c1a;
+  --tx2: #4a4a44;
+  --tx3: #8a8a80;
+  --accent: #e25800;
+  --accent2: #c04800;
+  --hover: #eeede6;
+  --tag-bg: #fff0e0;
+  --tag-tx: #c44800;
+  --orig: #1a7a42;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Noto Sans SC', sans-serif; background: var(--bg); color: var(--tx); line-height: 1.7; }
+
+.hdr {
+  max-width: 1080px; margin: 0 auto; padding: 56px 28px 36px; text-align: center;
+}
+.hdr h1 {
+  font-family: 'Noto Serif SC', serif; font-size: 3rem; font-weight: 700;
+  color: var(--accent); letter-spacing: 0.32em; cursor: pointer;
+}
+.hdr h1:hover { color: var(--accent2); }
+.hdr .sub {
+  color: var(--tx2); font-size: 0.88rem; margin-top: 8px;
+}
+.hdr .sub strong {
+  color: var(--accent2); font-family: 'JetBrains Mono', monospace; font-weight: 500;
+}
+
+.ctl {
+  max-width: 1080px; margin: 0 auto; padding: 12px 28px 16px;
+  position: sticky; top: 0; z-index: 100; background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.search-row {
+  display: flex; justify-content: flex-start; align-items: center; gap: 10px; margin-bottom: 10px;
+}
+.ctl-row {
+  display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 10px;
+}
+.search-wrap {
+  position: relative; display: inline-flex; align-items: center;
+}
+.search-icon {
+  position: absolute; left: 11px; color: var(--tx3); pointer-events: none;
+  transition: color 0.2s;
+}
+.search-wrap:focus-within .search-icon { color: var(--accent); }
+.search {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.84rem;
+  background: var(--s1); border: 1px solid var(--accent2); color: var(--tx);
+  padding: 7px 14px 7px 32px; border-radius: 6px; width: 320px; outline: none;
+  transition: border-color 0.2s;
+}
+.search:focus { border-color: var(--accent); }
+.search::placeholder { color: var(--tx3); }
+
+.yr-btn, .tag-btn {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+  background: var(--s1); border: 1px solid var(--accent2); color: var(--accent);
+  padding: 4px 10px; border-radius: 4px; cursor: pointer;
+  transition: all 0.12s; white-space: nowrap;
+}
+.yr-btn:hover, .tag-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--hover); }
+.yr-btn.on, .tag-btn.on { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.tag-btn .tc { opacity: 0.65; font-size: 0.68rem; }
+.yr-all {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent); background: none;
+  border: 1px solid var(--accent2); padding: 4px 10px; border-radius: 4px; cursor: pointer;
+}
+.yr-all.on { color: var(--bg); background: var(--accent); border-color: var(--accent); }
+.ctl-count {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.76rem;
+  color: var(--tx2); margin-left: auto;
+}
+.tags-row { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px 80px; }
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 500;
+  color: var(--tx3); text-transform: uppercase; letter-spacing: 0.1em;
+  padding: 14px 6px 10px; text-align: left; border-bottom: 1px solid var(--border);
+}
+.sort-th { cursor: pointer; user-select: none; display: flex; justify-content: space-between; align-items: center; }
+.sort-th:hover { color: var(--accent); }
+.sort-arrow { color: var(--accent); font-size: 0.85rem; }
+tbody tr { border-bottom: 1px solid var(--border); transition: background 0.08s; }
+tbody tr:hover { background: var(--hover); }
+td { padding: 12px 6px; vertical-align: top; }
+
+.c-date {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+  color: var(--tx3); white-space: nowrap; width: 100px; padding-top: 13px;
+}
+
+.title-row {
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px;
+}
+.art-title {
+  font-family: 'Noto Serif SC', serif; font-size: 1rem; font-weight: 600;
+  color: var(--tx); text-decoration: none; transition: color 0.12s; line-height: 1.5;
+}
+.art-title:hover { color: var(--accent); }
+
+.badge-orig {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; font-weight: 500;
+  color: var(--orig); border: 1px solid var(--orig);
+  padding: 0px 5px; border-radius: 3px; opacity: 0.8; flex-shrink: 0;
+}
+.tag {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+  color: var(--tag-tx); background: var(--tag-bg);
+  padding: 1px 6px; border-radius: 3px; cursor: pointer;
+  transition: all 0.1s; border: 1px solid transparent; flex-shrink: 0;
+}
+.tag:hover { color: var(--accent); border-color: var(--border2); }
+
+.art-digest {
+  font-size: 0.83rem; color: var(--tx2); margin-top: 3px; line-height: 1.5;
+}
+
+.hidden { display: none !important; }
+
+.theme-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: none; border: 1px solid var(--border2); color: var(--tx3);
+  width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+  transition: all 0.2s; margin-top: 14px;
+}
+.theme-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.ftr {
+  max-width: 1080px; margin: 0 auto; padding: 24px 28px;
+  border-top: 1px solid var(--border);
+  font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+  color: var(--tx3); text-align: center;
+}
+.ftr a { color: var(--tx2); text-decoration: none; }
+.ftr a:hover { color: var(--accent); }
+
+@media (max-width: 680px) {
+  .hdr { padding: 32px 16px 24px; }
+  .hdr h1 { font-size: 1.5rem; }
+  .ctl { padding-left: 16px; padding-right: 16px; }
+  .search-wrap { width: 100%; }
+  .search { width: 100%; }
+  .wrap { padding: 0 16px 48px; }
+  .c-date { width: 80px; font-size: 0.72rem; }
+  .art-title { font-size: 0.92rem; }
+  .title-row { gap: 4px; }
+}
+
+.orig-link {
+  margin-left: auto;
+}
+.orig-link a {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+  color: var(--tx3); text-decoration: none;
+  border: 1px solid var(--border2); border-radius: 3px;
+  padding: 1px 8px; transition: all 0.15s; white-space: nowrap;
+}
+.orig-link a:hover { color: var(--accent); border-color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1 onclick="goHome()">寻常</h1>
+  <div class="sub">
+    在千千万万寻常的日子里，看过简单的风景，听过温暖的歌，偶尔还是忍不住停下来，回头看看，你是否还在……
+  </div>
+  <div class="sub" style="margin-top:6px;">
+    微信公众号文章备份 &middot;
+    总计<strong>260</strong> 篇
+  </div>
+  <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="切换亮色/暗色">
+    <svg id="iconMoon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg id="iconSun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
+</div>
+
+<div class="ctl">
+  <div class="search-row">
+    <div class="search-wrap">
+      <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" class="search" id="q" placeholder="搜索标题 / 摘要..." oninput="apply()">
+    </div>
+  </div>
+  <div class="ctl-row">
+    <button class="yr-all on" id="yrAll" onclick="clearYear(this)">全部年份</button>
+    <button class="yr-btn" onclick="filterYear(this,'2026')">2026</button>
+    <button class="yr-btn" onclick="filterYear(this,'2025')">2025</button>
+    <button class="yr-btn" onclick="filterYear(this,'2024')">2024</button>
+    <button class="yr-btn" onclick="filterYear(this,'2023')">2023</button>
+    <button class="yr-btn" onclick="filterYear(this,'2022')">2022</button>
+    <button class="yr-btn" onclick="filterYear(this,'2021')">2021</button>
+    <button class="yr-btn" onclick="filterYear(this,'2020')">2020</button>
+    <button class="yr-btn" onclick="filterYear(this,'2019')">2019</button>
+    <button class="yr-btn" onclick="filterYear(this,'2018')">2018</button>
+    <button class="yr-btn" onclick="filterYear(this,'2017')">2017</button>
+    <button class="yr-btn" onclick="filterYear(this,'2016')">2016</button>
+    <button class="yr-btn" onclick="filterYear(this,'2015')">2015</button>
+    <span class="ctl-count" id="cnt"></span>
+  </div>
+  <div class="tags-row">
+    <button class="yr-all on" id="tagAll" onclick="clearTag(this)">全部标签</button>
+    <button class="tag-btn" onclick="filterTag(this,'随笔杂文')">随笔杂文 <span class="tc">135</span></button>
+    
+    <button class="tag-btn" onclick="filterTag(this,'读书笔记')">读书笔记 <span class="tc">17</span></button>
+    <button class="tag-btn" onclick="filterTag(this,'建筑设计')">建筑设计 <span class="tc">28</span></button>
+    <button class="tag-btn" onclick="filterTag(this,'城市设计')">城市设计 <span class="tc">15</span></button>
+    <button class="tag-btn" onclick="filterTag(this,'芬兰游记')">芬兰游记 <span class="tc">15</span></button>
+    <button class="tag-btn" onclick="filterTag(this,'澳洲游记')">澳洲游记 <span class="tc">6</span></button>
+    <button class="tag-btn" onclick="filterTag(this,'美国游记')">美国游记 <span class="tc">6</span></button>
+    <button class="tag-btn" onclick="filterTag(this,'西班牙游记')">西班牙游记 <span class="tc">27</span></button>
+    <button class="tag-btn" onclick="filterTag(this,'游记')">游记 <span class="tc">7</span></button>
+    <button class="tag-btn" onclick="filterTag(this,'其他')">其他 <span class="tc">4</span></button>
+  </div>
+</div>
+
+<div class="wrap">
+<table>
+<thead><tr>
+  <th class="sort-th" onclick="toggleSort()">日期<span class="sort-arrow" id="sortArrow">↓</span></th>
+  <th>文章</th>
+</tr></thead>
+<tbody id="lst">
+<tr data-year="2026" data-tags="随笔杂文" data-title="2025，年终杂记">
+  <td class="c-date">2026-01-26</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./2025_年终杂记/index.html" target="_blank" rel="noopener">2025，年终杂记</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/XyUjERTfDApIsrUy8QgMNQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">无论如何，时间不会因为任何人的犹豫而停止，我们都只能做好身边事，珍惜眼前人。</div>
+  </td>
+</tr><tr data-year="2025" data-tags="随笔杂文" data-title="表达欲消失的一年">
+  <td class="c-date">2025-09-01</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./表达欲消失的一年/index.html" target="_blank" rel="noopener">表达欲消失的一年</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/EB1K_nI1wnOy-dqoz52C6w" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">人不仅有被看见的需求，更有不被看见的需求</div>
+  </td>
+</tr><tr data-year="2024" data-tags="随笔杂文" data-title="生活实验 ｜从一日三餐到一日两餐">
+  <td class="c-date">2024-11-24</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./生活实验__从一日三餐到一日两餐/index.html" target="_blank" rel="noopener">生活实验 ｜从一日三餐到一日两餐</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/FW2FjocWPUWxMPDrcZLjNA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">许多我曾经习以为常的生活方式，往往并不是最优的选择。自己很有可能是错的，所以要对不同的声音保持开放的态度</div>
+  </td>
+</tr><tr data-year="2024" data-tags="随笔杂文" data-title="chatgpt 写作指南">
+  <td class="c-date">2024-11-15</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./ChatGPT_写作指南/index.html" target="_blank" rel="noopener">ChatGPT 写作指南</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/x8i29q7xwkiwtjGPdNUTQA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">与其只是努力完成，不如尝试让 ChatGPT 建议如何培养批判性思考和清晰写作的能力。</div>
+  </td>
+</tr><tr data-year="2024" data-tags="随笔杂文" data-title="清迈随记">
+  <td class="c-date">2024-11-03</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./清迈随记/index.html" target="_blank" rel="noopener">清迈随记</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/cExhfESTdqXFN7V3meC7PA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">是什么给了清迈这样的吸引力，使之可以凭借看似简陋的城市基础设施成为国际化的大舞台，承载了丰富多元的活动和参差百态的人群？</div>
+  </td>
+</tr><tr data-year="2024" data-tags="随笔杂文" data-title="生活杂想-关于快乐与平静">
+  <td class="c-date">2024-05-24</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./生活杂想_关于快乐与平静/index.html" target="_blank" rel="noopener">生活杂想-关于快乐与平静</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/2olyBwnH06IAptZJKv1g7Q" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">如果他人因对你抱有期待而受伤，那就是他们的问题，他们会对生活有各种各样的期待，越早打破他们对你的期待越好。</div>
+  </td>
+</tr><tr data-year="2024" data-tags="其他" data-title="人的本能是自我保护，不愿意承认自己是失败者。当一个人实际驾驭不了某项工作时会觉得是我“不喜欢”。但这只是把外在的挑战转化为了内心的煎熬，并没有让生活更轻松，反而会更折磨人。">
+  <td class="c-date">2024-04-21</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./人的本能是自我保护_不愿意承认自己是失败者_当一个人实际驾驭不了某项工作时会觉得是我_不喜欢__但这只是把外在的挑战转化为了内心的煎熬_并没有让生活更轻松_反而会更折磨人_/index.html" target="_blank" rel="noopener">人的本能是自我保护，不愿意承认自己是失败者。当一个人实际驾驭不了某项工作时会觉得是我“不喜欢”。但这只是把外在的挑战转化为了内心的煎熬，并没有让生活更轻松，反而会更折磨人。</a><span class="tag" onclick="filterTag(this,'其他')">其他</span></div>
+    <div class="art-digest"></div>
+  </td>
+</tr><tr data-year="2024" data-tags="随笔杂文" data-title="30岁只是童年的结束">
+  <td class="c-date">2024-04-20</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./30岁只是童年的结束/index.html" target="_blank" rel="noopener">30岁只是童年的结束</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/Rl0OfhkhwwuW1xakglg6Pg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">在30岁的这个节点，生命的力量还没有开始枯竭，我们还有机会重塑自己，纠正过去错误的认知，习惯和选择</div>
+  </td>
+</tr><tr data-year="2024" data-tags="随笔杂文" data-title="询问文化与猜测文化">
+  <td class="c-date">2024-04-05</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./询问文化与猜测文化/index.html" target="_blank" rel="noopener">询问文化与猜测文化</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/vIKS83QJ5mG3a0dYcAaYfA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">一个人只有弄明白自己的需求到底是什么，并且把它放在首位，真诚而直接的表达，才是得到真正的成长。</div>
+  </td>
+</tr><tr data-year="2024" data-tags="随笔杂文" data-title="由《植物王国》引发的几点思考">
+  <td class="c-date">2024-03-16</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./由_植物王国_引发的几点思考/index.html" target="_blank" rel="noopener">由《植物王国》引发的几点思考</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/c65_9pFMO9gld_g-UYXMkQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">植物带给我们的不仅仅是视觉上的美丽，它们更是地球上绝大多数生命的基础。</div>
+  </td>
+</tr><tr data-year="2024" data-tags="随笔杂文" data-title="随笔 ｜三则杂记">
+  <td class="c-date">2024-02-19</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔__三则杂记/index.html" target="_blank" rel="noopener">随笔 ｜三则杂记</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/j8Vqud_Q4fNOGH4RdjOpKg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">信息传播的正确姿势，是被检索、讨论、引用、整理、补充和更新，而不是社交网络的转发、点赞、粉丝、订阅和打赏</div>
+  </td>
+</tr><tr data-year="2023" data-tags="随笔杂文" data-title="随笔 ｜ 放弃目标，专注系统">
+  <td class="c-date">2023-11-12</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___放弃目标_专注系统/index.html" target="_blank" rel="noopener">随笔 ｜ 放弃目标，专注系统</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/hPZXW_ojefIk0zY39Lqwmw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">减少阻力而不是一味地增加动力，系统地解决问题，才是更好的选择。</div>
+  </td>
+</tr><tr data-year="2023" data-tags="随笔杂文" data-title="随笔 ｜沈眉庄的人生重塑之路">
+  <td class="c-date">2023-10-29</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔__沈眉庄的人生重塑之路/index.html" target="_blank" rel="noopener">随笔 ｜沈眉庄的人生重塑之路</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/HSGMXp6T4C2kiWHblYNvCQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">保持个人内心的宁静永远比满足外界的期许更重要</div>
+  </td>
+</tr><tr data-year="2023" data-tags="随笔杂文" data-title="随笔｜常熟游记">
+  <td class="c-date">2023-09-03</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔_常熟游记/index.html" target="_blank" rel="noopener">随笔｜常熟游记</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/sc1PIcbxHfSc7CTOQ662PA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">&quot;七溪流水皆通海，十里青山半入城&quot;</div>
+  </td>
+</tr><tr data-year="2023" data-tags="随笔杂文" data-title="关于《情人》">
+  <td class="c-date">2023-08-13</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./关于_情人_/index.html" target="_blank" rel="noopener">关于《情人》</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/K2PUcpAQ6qsz1tPfhKHEnw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">从渡轮搭讪开始，这种微妙的平衡就注定会开启不平凡的故事。</div>
+  </td>
+</tr><tr data-year="2023" data-tags="随笔杂文" data-title="从“计算几何”谈起">
+  <td class="c-date">2023-07-22</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./从_计算几何_谈起/index.html" target="_blank" rel="noopener">从“计算几何”谈起</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/yHkkq118CrzE7Ulw_rRoNw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">除了具体知识，更令我触动的是一整套思考问题、界定边界、寻找方法，优化流程的思路。</div>
+  </td>
+</tr><tr data-year="2023" data-tags="读书笔记" data-title="读书笔记 ｜ 《魔戒》即在手中">
+  <td class="c-date">2023-05-28</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./读书笔记____魔戒_即在手中/index.html" target="_blank" rel="noopener">读书笔记 ｜ 《魔戒》即在手中</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'读书笔记')">读书笔记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/2vaRXW1sBryuLzZYPIFjoQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">He hated the dark, and he hated light more: he hated everything, and the Ring most of all</div>
+  </td>
+</tr><tr data-year="2023" data-tags="建筑设计" data-title="工作札记（5） ｜ 随记">
+  <td class="c-date">2023-05-21</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./工作札记（5）___随记/index.html" target="_blank" rel="noopener">工作札记（5） ｜ 随记</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/buse0MibrcYqy7f68kIxAQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">虽然知道有一天人工智能会让我们都变成无用之人，但我还是愿意选择”今朝有酒今朝醉“，先用最趁手的工具，解决最紧急的问题。</div>
+  </td>
+</tr><tr data-year="2023" data-tags="随笔杂文" data-title="随笔 ｜ 从阳台种菜说起">
+  <td class="c-date">2023-04-30</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___从阳台种菜说起/index.html" target="_blank" rel="noopener">随笔 ｜ 从阳台种菜说起</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/3sSZfWM8oQU03CaqSMPnPw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我无法想象一颗种子是怎样在基因的驱使下，通过不断地分裂细胞，发展出一套错综复杂的内部结构，编织出千变万化的枝叶形态的。</div>
+  </td>
+</tr><tr data-year="2023" data-tags="随笔杂文" data-title="随笔 ｜ 关于“工具”">
+  <td class="c-date">2023-04-15</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___关于_工具_/index.html" target="_blank" rel="noopener">随笔 ｜ 关于“工具”</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/KoCvufMKGXSYJeJPtc2Xow" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">有一些新的工具，新的观点震撼到我的时候，那种颤栗感不是心里上的，而是生理上的。</div>
+  </td>
+</tr><tr data-year="2023" data-tags="随笔杂文" data-title="随笔 ｜ 桐庐琐记（上）">
+  <td class="c-date">2023-04-06</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___桐庐琐记（上）/index.html" target="_blank" rel="noopener">随笔 ｜ 桐庐琐记（上）</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/pTwy1AR1XeJkJv65vtvJ5A" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">山水能让人忘忧，但真正的岁月静好始终是一种人生态度，靠躲进深山，吸风饮露是不可能永久获得的，直面人生的风雨和自己的无奈，才有可能偶尔得之吧。</div>
+  </td>
+</tr><tr data-year="2023" data-tags="随笔杂文" data-title="随笔 ｜玉兰与窄门">
+  <td class="c-date">2023-03-08</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔__玉兰与窄门/index.html" target="_blank" rel="noopener">随笔 ｜玉兰与窄门</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/WfLJWaB3i_MYWeiHz6SiYA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">光阴的流逝会让一棵树越发茁壮。在这个意义上来说，人是不如树的，人经不起岁月长久地锉磨，趁着春光尚好，还是要投入地去生活。</div>
+  </td>
+</tr><tr data-year="2023" data-tags="随笔杂文" data-title="随笔 ｜ 元宵杂记">
+  <td class="c-date">2023-02-05</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___元宵杂记/index.html" target="_blank" rel="noopener">随笔 ｜ 元宵杂记</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/mPDco4XDNR2QMLn7Pmdknw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">今天是元宵节，丝毫没有出门逛街、逛灯会的想法。在家收拾了半天屋子，加了半天班，吃了三个芝麻汤圆，晚上接着帮k</div>
+  </td>
+</tr><tr data-year="2023" data-tags="随笔杂文" data-title="随笔 ｜ 写在2023前面">
+  <td class="c-date">2023-01-02</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___写在2023前面/index.html" target="_blank" rel="noopener">随笔 ｜ 写在2023前面</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/OtPC9dlzhu5eIaXU4OpEaQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">长河无声奔去，唯爱与信念永存</div>
+  </td>
+</tr><tr data-year="2022" data-tags="随笔杂文" data-title="随笔 ｜微环境">
+  <td class="c-date">2022-12-10</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔__微环境/index.html" target="_blank" rel="noopener">随笔 ｜微环境</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/gEqv57pKsXHqH5oQJM0nHw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">即使是在大环境非常恶劣的时候，我们依然有能力，也依然有必要通过积极地介入，营造一个相对舒适的局部环境。</div>
+  </td>
+</tr><tr data-year="2022" data-tags="读书笔记" data-title="读书笔记 | 《混乱》">
+  <td class="c-date">2022-12-04</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./读书笔记____混乱_/index.html" target="_blank" rel="noopener">读书笔记 | 《混乱》</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'读书笔记')">读书笔记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/lvZeKTJ8r0oy08iX2z_GOA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">Chaos isn&#x27;t a pit. Chaos is a ladder</div>
+  </td>
+</tr><tr data-year="2022" data-tags="随笔杂文" data-title="随笔 ｜ 三种特质">
+  <td class="c-date">2022-12-03</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___三种特质/index.html" target="_blank" rel="noopener">随笔 ｜ 三种特质</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/8CPmVPmwBNlATboyF7Y-eg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">宠辱不惊，去留无意，是需要很高修养的。</div>
+  </td>
+</tr><tr data-year="2022" data-tags="随笔杂文" data-title="随笔 | 具体地去生活">
+  <td class="c-date">2022-11-13</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___具体地去生活/index.html" target="_blank" rel="noopener">随笔 | 具体地去生活</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/iYahE-EfHY5cxAWLxaH5Uw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">人可以抽象地思考，但必须具体地生活。</div>
+  </td>
+</tr><tr data-year="2022" data-tags="其他" data-title="一段时间集中关注一个主题，把相关资料联系起来去交叉印证是个挺有意思的事。比如从《王冠》、《女王》开始，到《国王的演讲》到《至暗时刻》，分别从伊丽莎白女王的角度，从乔治六世的角度，从丘吉尔的角度去讲述二战前、中、后期发生在英国的一系列事件。不同演员或者相同演员在不同影视作品中刻画同一历史人物，有共性，也有各自想要侧重的方面。我们正好借此求同存异，建立起更为丰富多元的认知。">
+  <td class="c-date">2022-10-16</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./一段时间集中关注一个主题_把相关资料联系起来去交叉印证是个挺有意思的事_比如从_王冠___女王_开始_到_国王的演讲_到_至暗时刻__分别从伊丽莎白女王的角度_从乔治六世的角度_从丘吉尔的角度去讲述二/index.html" target="_blank" rel="noopener">一段时间集中关注一个主题，把相关资料联系起来去交叉印证是个挺有意思的事。比如从《王冠》、《女王》开始，到《国王的演讲》到《至暗时刻》，分别从伊丽莎白女王的角度，从乔治六世的角度，从丘吉尔的角度去讲述二战前、中、后期发生在英国的一系列事件。不同演员或者相同演员在不同影视作品中刻画同一历史人物，有共性，也有各自想要侧重的方面。我们正好借此求同存异，建立起更为丰富多元的认知。</a><span class="tag" onclick="filterTag(this,'其他')">其他</span></div>
+    <div class="art-digest"></div>
+  </td>
+</tr><tr data-year="2022" data-tags="随笔杂文" data-title="随笔 ｜从重装win11系统说起">
+  <td class="c-date">2022-10-15</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔__从重装win11系统说起/index.html" target="_blank" rel="noopener">随笔 ｜从重装win11系统说起</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/arpVDL6k0Sx_uHSDRU-KXg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我本可以忍受黑暗，如果我未曾见过光明</div>
+  </td>
+</tr><tr data-year="2022" data-tags="建筑设计" data-title="工作札记（4）｜几点工作心得">
+  <td class="c-date">2022-10-05</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./工作札记（4）_几点工作心得/index.html" target="_blank" rel="noopener">工作札记（4）｜几点工作心得</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/Elw4OKN9dKVP-MFB9sk5tA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">做一件事情的状态和节奏是否合理，比这件事本身是否吸引人更重要</div>
+  </td>
+</tr><tr data-year="2022" data-tags="随笔杂文" data-title="随笔 ｜关于“一气呵成”">
+  <td class="c-date">2022-10-03</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔__关于_一气呵成_/index.html" target="_blank" rel="noopener">随笔 ｜关于“一气呵成”</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/4T_qp-cWgWB2zE9Z45GpQQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">写作是个把网状的思考，用树状的语法结构，转换成线性字符串的过程</div>
+  </td>
+</tr><tr data-year="2022" data-tags="随笔杂文" data-title="随笔 ｜门禁">
+  <td class="c-date">2022-09-25</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔__门禁/index.html" target="_blank" rel="noopener">随笔 ｜门禁</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/Z1iAQnR9TB0mChAA-dkD8Q" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">如今，除了这许多的证，又多出了许多的码……</div>
+  </td>
+</tr><tr data-year="2022" data-tags="随笔杂文" data-title="随笔 ｜生活随笔">
+  <td class="c-date">2022-08-28</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔__生活随笔/index.html" target="_blank" rel="noopener">随笔 ｜生活随笔</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/9JCNnp1NuDcgeIk_B04d3g" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我们在黑暗中并肩行走，走在各自的朝圣路上</div>
+  </td>
+</tr><tr data-year="2022" data-tags="随笔杂文" data-title="随笔 | 无法拒绝的不方便">
+  <td class="c-date">2022-08-14</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___无法拒绝的不方便/index.html" target="_blank" rel="noopener">随笔 | 无法拒绝的不方便</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/dN2nZbJTxVq5ME42FoAtqQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">这种自由感的丧失充斥在生活的方方面面，我姑且把他们都统称为“不方便”。这些不方便，你我根本无法拒绝，最有可能的结果是，人们逐渐习惯了种种不便，最终默默承受了一切。</div>
+  </td>
+</tr><tr data-year="2022" data-tags="随笔杂文" data-title="随笔 | 无法拒绝的不方便">
+  <td class="c-date">2022-08-14</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___无法拒绝的不方便/index.html" target="_blank" rel="noopener">随笔 | 无法拒绝的不方便</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/k6zbCWeT7Bik0Q-DSIJWJQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我们的生活看起来每天都一样，但其实不知不觉中发生了很多不可逆的变化，如果仔细观察，都有迹可循。</div>
+  </td>
+</tr><tr data-year="2022" data-tags="随笔杂文" data-title="随笔 ｜ 被错过的另一条路">
+  <td class="c-date">2022-08-07</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___被错过的另一条路/index.html" target="_blank" rel="noopener">随笔 ｜ 被错过的另一条路</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/T4zWdnxNxlhwA7hQzRkS4Q" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">“合肥”这条被错过的路，终究又以多重方式和我的生活交织在了一起。给了我看待很多问题新的视角。那些错过无法挽回了，这所有的错过，也终究都是选择而已。</div>
+  </td>
+</tr><tr data-year="2022" data-tags="建筑设计" data-title="工作札记(3) | 22中设计模式的启发">
+  <td class="c-date">2022-07-10</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./工作札记(3)___22中设计模式的启发/index.html" target="_blank" rel="noopener">工作札记(3) | 22中设计模式的启发</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/IZWG9iFxIUXTAAjz741ZXg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">被这套体系塑造出的设计师似乎在对形体和概念的追逐中逐渐迷失，放弃了对于设计模式的深入理解和研究。而那些被我们放弃的思维工具，在计算机领域大放异彩，彻底改变了世界的面貌，何其令人感慨。</div>
+  </td>
+</tr><tr data-year="2022" data-tags="随笔杂文" data-title="随笔 | 上海滨江漫谈">
+  <td class="c-date">2022-06-26</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___上海滨江漫谈/index.html" target="_blank" rel="noopener">随笔 | 上海滨江漫谈</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/9KyUtGed_dKqhZR_zBr8Vw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">置身于这样的人群中，置身于这样的的城市生活中，我不知道该怎么形容，只能暂时用感动来概括了。</div>
+  </td>
+</tr><tr data-year="2022" data-tags="读书笔记" data-title="读书笔记 | 《当我谈跑步时，我在谈什么》">
+  <td class="c-date">2022-06-19</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./读书笔记____当我谈跑步时_我在谈什么_/index.html" target="_blank" rel="noopener">读书笔记 | 《当我谈跑步时，我在谈什么》</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'读书笔记')">读书笔记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/lS3E27hETG__uYYAvAFHPw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">突然有一天，我出于喜欢开始写小说。又有一天，我出于喜欢开始在马路上跑步。不拘什么，按照自己喜欢的方式做喜欢的事情，我就是这样生活的</div>
+  </td>
+</tr><tr data-year="2022" data-tags="随笔杂文" data-title="随笔 | 变化的脉络">
+  <td class="c-date">2022-05-29</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___变化的脉络/index.html" target="_blank" rel="noopener">随笔 | 变化的脉络</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/RqZo1tQTaRnX5cWaEBP7bg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">过去这六年到底发生了什么，改变了什么，没有任何回忆会比白纸黑色更有说服力。</div>
+  </td>
+</tr><tr data-year="2022" data-tags="随笔杂文" data-title="随笔 | 变化的脉络">
+  <td class="c-date">2022-05-29</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___变化的脉络/index.html" target="_blank" rel="noopener">随笔 | 变化的脉络</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/Nogxuxu0VGZQQf9IJlAXOQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">过去这六年到底发生了什么，改变了什么，没有任何回忆会比白纸黑色更有说服力。</div>
+  </td>
+</tr><tr data-year="2022" data-tags="随笔杂文" data-title="随笔 | 一个半月">
+  <td class="c-date">2022-05-15</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___一个半月/index.html" target="_blank" rel="noopener">随笔 | 一个半月</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/yDIPemi5BBv594kWXdhllg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">当空间的流动被限制以后，人们却更能感受到时间的流逝和季节的流转。</div>
+  </td>
+</tr><tr data-year="2022" data-tags="建筑设计" data-title="工作札记（2）| 浅谈建筑面积计算规范">
+  <td class="c-date">2022-04-17</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./工作札记（2）__浅谈建筑面积计算规范/index.html" target="_blank" rel="noopener">工作札记（2）| 浅谈建筑面积计算规范</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/rC55T0KqGmp7KRFzcNGLIQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">&quot;夫悬衡而知平，设规而知圆，万全之道也。&quot;——《韩非子·饰邪》在设计院工作的时候，我没有一次耐心地把建筑面积</div>
+  </td>
+</tr><tr data-year="2022" data-tags="建筑设计" data-title="工作札记（1） | 关于建筑专业转型的理解">
+  <td class="c-date">2022-04-15</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./工作札记（1）___关于建筑专业转型的理解/index.html" target="_blank" rel="noopener">工作札记（1） | 关于建筑专业转型的理解</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/ywyx2ZS95XgyocROvkovjw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我相信，未来大家要有更好的生活环境，更高品质的建筑和城市空间，建筑学的意义依旧非常重大。地产、设计院经过阵痛，经过转型，也都会有全新的未来。这些都必须依赖于一大批真正热爱建筑设计的人，用真正科学的思考方式，用更好的工具去创造和实践。</div>
+  </td>
+</tr><tr data-year="2022" data-tags="随笔杂文" data-title="随笔 | 身在其中（2）">
+  <td class="c-date">2022-04-09</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___身在其中（2）/index.html" target="_blank" rel="noopener">随笔 | 身在其中（2）</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/pZoaZzoBnHQl0p7QWKH_GQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">&quot;夫民虑之于心而宣之于口，成而行之，胡可壅也？若壅其口，其与能几何？&quot;</div>
+  </td>
+</tr><tr data-year="2022" data-tags="随笔杂文" data-title="随笔 | 身在其中（1）">
+  <td class="c-date">2022-03-27</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___身在其中（1）/index.html" target="_blank" rel="noopener">随笔 | 身在其中（1）</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/H58HCayEwoFMNq4o8jG6rg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">生活并没有到紧要的关头，一切都还在继续，只是在很多方面收敛了。</div>
+  </td>
+</tr><tr data-year="2022" data-tags="随笔杂文" data-title="随笔 | 关于编程的一点感想">
+  <td class="c-date">2022-03-25</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___关于编程的一点感想/index.html" target="_blank" rel="noopener">随笔 | 关于编程的一点感想</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/l-tEbYhZ2DtAtdBR-KPfdQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">这十年，我对计算机，对编程的认知和态度发生了很大的转变。</div>
+  </td>
+</tr><tr data-year="2022" data-tags="随笔杂文" data-title="随笔 | 春夜杂记">
+  <td class="c-date">2022-03-13</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___春夜杂记/index.html" target="_blank" rel="noopener">随笔 | 春夜杂记</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/uT1o8PrafwGSCD7uxmfLrA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">越是面对大的浩劫，越应该保持常态，外界越乱，心里就越要稳。</div>
+  </td>
+</tr><tr data-year="2022" data-tags="随笔杂文" data-title="随笔 | 2022新年寄语">
+  <td class="c-date">2022-01-29</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___2022新年寄语/index.html" target="_blank" rel="noopener">随笔 | 2022新年寄语</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/b-FCjaN_mK3bIXVTzgSMpQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我做了太多年听话的乖女儿，好学生，如今我真的想不受任何干扰地自己做决定。</div>
+  </td>
+</tr><tr data-year="2022" data-tags="其他" data-title="关于web3基础设施">
+  <td class="c-date">2022-01-10</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./关于Web3基础设施/index.html" target="_blank" rel="noopener">关于Web3基础设施</a><span class="tag" onclick="filterTag(this,'其他')">其他</span></div>
+    <div class="art-digest">分享一篇文章，来自XPTY。我还是期待这个世界朝着更加开放的方向发展，而不是越来越封闭。</div>
+  </td>
+</tr><tr data-year="2021" data-tags="建筑设计" data-title="设计札记（9）| 另一条路">
+  <td class="c-date">2021-12-27</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./设计札记（9）__另一条路/index.html" target="_blank" rel="noopener">设计札记（9）| 另一条路</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/-SLra4TbBvOyJVOxac3iFA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">中国人常说，“退一步海阔天空”，但很多时候，往前一步才有真正的海阔天空。</div>
+  </td>
+</tr><tr data-year="2021" data-tags="建筑设计" data-title="设计札记（8）| 过早优化是万恶之源">
+  <td class="c-date">2021-11-30</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./设计札记（8）__过早优化是万恶之源/index.html" target="_blank" rel="noopener">设计札记（8）| 过早优化是万恶之源</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/Z07KTUqo-tJeDliq8CaHvQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">所有的设计在底层逻辑上都是相同的，和人生的根本原则也是相通的。</div>
+  </td>
+</tr><tr data-year="2021" data-tags="随笔杂文" data-title="随笔 | 新名字的故事">
+  <td class="c-date">2021-11-23</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___新名字的故事/index.html" target="_blank" rel="noopener">随笔 | 新名字的故事</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/N6AYLG8G12njvDmikd93IA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">很多事，不经历，你永远都无法想象自己身处其中会当如何……</div>
+  </td>
+</tr><tr data-year="2021" data-tags="其他" data-title="很喜欢闲的时候做一些梳理，不管别人怎么说，我希望有自己的评价体系。比如排在我心里前两位的中国近代作家是鲁迅和王小波，外国作家是赫尔曼.黑塞和尼采，最美的城市是巴塞罗那和纽约。
+
+现阶段觉得人最重要的品质，一是平静，在复杂和混乱中保持内心的宁静和充实；二是勇气，任何时候敢于去尝试和追求，更敢于放弃和止损，而不是仅仅停留在将就和观望中。说起来很简单，要做到太难了。">
+  <td class="c-date">2021-10-18</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./很喜欢闲的时候做一些梳理_不管别人怎么说_我希望有自己的评价体系_比如排在我心里前两位的中国近代作家是鲁迅和王小波_外国作家是赫尔曼_黑塞和尼采_最美的城市是巴塞罗那和纽约___现阶段觉得人最重要的品/index.html" target="_blank" rel="noopener">很喜欢闲的时候做一些梳理，不管别人怎么说，我希望有自己的评价体系。比如排在我心里前两位的中国近代作家是鲁迅和王小波，外国作家是赫尔曼.黑塞和尼采，最美的城市是巴塞罗那和纽约。
+
+现阶段觉得人最重要的品质，一是平静，在复杂和混乱中保持内心的宁静和充实；二是勇气，任何时候敢于去尝试和追求，更敢于放弃和止损，而不是仅仅停留在将就和观望中。说起来很简单，要做到太难了。</a><span class="tag" onclick="filterTag(this,'其他')">其他</span></div>
+    <div class="art-digest"></div>
+  </td>
+</tr><tr data-year="2021" data-tags="建筑设计" data-title="设计札记（7）| 渡过漫长的困难时光">
+  <td class="c-date">2021-09-20</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./设计札记（7）__渡过漫长的困难时光/index.html" target="_blank" rel="noopener">设计札记（7）| 渡过漫长的困难时光</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/QEt8b7xCeZjJNPipgYYJtQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">这段困难的时光我肯定可以渡过去，只是不知道会以什么样的方式，也不知道需要多长时间。</div>
+  </td>
+</tr><tr data-year="2021" data-tags="随笔杂文" data-title="随笔 | 《饥荒》漫谈">
+  <td class="c-date">2021-08-22</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔____饥荒_漫谈/index.html" target="_blank" rel="noopener">随笔 | 《饥荒》漫谈</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/vpAjrGNqj0wN_i7M3yo5bA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">如果把人生比作游戏，那么在上大学以前就是《超级马里奥》，一路向右，跨越障碍，收集金币和蘑菇，通关，再通下一关。而大学以后的人生更像《饥荒》，你突然从一片原野中醒来，不知道自己身在何处，不知道会有怎样的危险，甚至不知道如何度过今夜。</div>
+  </td>
+</tr><tr data-year="2021" data-tags="随笔杂文" data-title="随笔 | 一生所系">
+  <td class="c-date">2021-07-26</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___一生所系/index.html" target="_blank" rel="noopener">随笔 | 一生所系</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/b4B596NKj6QlW4OCH1M64w" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">从今往后，执子之手，风雨同舟。未来的人生之路，不再只是“我”，而变成了“我们”。</div>
+  </td>
+</tr><tr data-year="2021" data-tags="建筑设计" data-title="设计札记（6）| 入职一周年随记">
+  <td class="c-date">2021-07-22</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./设计札记（6）__入职一周年随记/index.html" target="_blank" rel="noopener">设计札记（6）| 入职一周年随记</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/9X2omsioqhUPM4xcH5hh3w" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">第一年，最重要的就是要改掉毛病，养成良好的工作习惯，保持精力和热情。</div>
+  </td>
+</tr><tr data-year="2021" data-tags="随笔杂文" data-title="随笔 | 冒险与朝圣">
+  <td class="c-date">2021-05-05</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___冒险与朝圣/index.html" target="_blank" rel="noopener">随笔 | 冒险与朝圣</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/AjRyahgICd1p9usEb7NRtg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">生活教给我们的肯定比圣地亚哥朝圣之路要多，但我们常常不相信生活的教诲</div>
+  </td>
+</tr><tr data-year="2021" data-tags="建筑设计" data-title="设计札记（5）| 如何不让自己在工作中崩溃">
+  <td class="c-date">2021-05-03</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./设计札记（5）__如何不让自己在工作中崩溃/index.html" target="_blank" rel="noopener">设计札记（5）| 如何不让自己在工作中崩溃</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/id_vi8y1esfLXYN7TC9TeA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">当下的负重前行很难，但也会有工作被认可带来的成就，也会有跟家人相处的幸福时光，不管怎样，都要珍惜时间，珍爱生命。活着，见证自己的成长，旁观世界的变化，也期待更合理，更自在，更快乐的工作状态的到来。</div>
+  </td>
+</tr><tr data-year="2021" data-tags="随笔杂文" data-title="随笔 | 旺达幻视">
+  <td class="c-date">2021-03-07</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___旺达幻视/index.html" target="_blank" rel="noopener">随笔 | 旺达幻视</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/LauxEzPhl8A3qW0DTdbJeg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">《旺达幻视》以喜剧开头，以悲剧结尾，影片充满着科幻与魔法的奇特想象，但内核想要探讨的还是：我们该如何面对过往的伤痛，面对现实生活的不如意。当一段悲伤的往事成为一个人的全部，那才是悲剧真正的开始。</div>
+  </td>
+</tr><tr data-year="2021" data-tags="建筑设计" data-title="设计札记（4）| 半年工作复盘">
+  <td class="c-date">2021-02-18</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./设计札记（4）__半年工作复盘/index.html" target="_blank" rel="noopener">设计札记（4）| 半年工作复盘</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/fEo_RG-JotF8Ho0vuTbwSw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">没有这个核心的人，他的生活是碎片，譬如说，会分裂成两个令人不快的部分，一部分是折磨人的劳作，另一部分是无所用心的休闲。</div>
+  </td>
+</tr><tr data-year="2021" data-tags="随笔杂文" data-title="随笔 | 春节杂记">
+  <td class="c-date">2021-02-17</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___春节杂记/index.html" target="_blank" rel="noopener">随笔 | 春节杂记</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/8EE4ycXk2_Dp1hZKiVPajA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我们的人生注定要从桃李春风走向江湖夜雨，然而江湖也自有江湖的故事。</div>
+  </td>
+</tr><tr data-year="2021" data-tags="随笔杂文" data-title="随笔 | 2020结语">
+  <td class="c-date">2021-01-02</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___2020结语/index.html" target="_blank" rel="noopener">随笔 | 2020结语</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/01901WA0jd4nt1_E4uXzCQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">以一场漫天大雪，一场彻骨严寒作为2020年最后的注脚，真是再恰当不过。</div>
+  </td>
+</tr><tr data-year="2020" data-tags="读书笔记" data-title="读书笔记 i 《娱乐至死》">
+  <td class="c-date">2020-12-13</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./读书笔记_I__娱乐至死_/index.html" target="_blank" rel="noopener">读书笔记 I 《娱乐至死》</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'读书笔记')">读书笔记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/JtaqHVh5q4UVN7fYvnBHiA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">简而言之，奥威尔担心我们憎恨的东西会毁掉我们，而赫胥黎担心的是，我们将毁于我们热爱的东西。</div>
+  </td>
+</tr><tr data-year="2020" data-tags="建筑设计" data-title="设计札记（3）| 10月，11月复盘">
+  <td class="c-date">2020-11-29</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./设计札记（3）__10月_11月复盘/index.html" target="_blank" rel="noopener">设计札记（3）| 10月，11月复盘</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/OWYlQ4yFQPcyGnsXoygg9w" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">这么多年的应试教育，我习惯于先做简单的题和会做的题，大学里也习惯先做容易的事情，再去解决麻烦的问题，这样可以保证最高的分数和最好的绩点。但在设计中，必须先把最麻烦的问题解决掉，否则后期就会出现颠覆性的调整，这对设计来讲是致命伤。</div>
+  </td>
+</tr><tr data-year="2020" data-tags="建筑设计" data-title="设计札记（2）| 7、8、9月复盘">
+  <td class="c-date">2020-09-26</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./设计札记（2）__7_8_9月复盘/index.html" target="_blank" rel="noopener">设计札记（2）| 7、8、9月复盘</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/TcG1EcEPSp6ozIkqYYZ2Hw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">你不需要一种稀缺的工作，你需要的是用世间少有的方式完成工作</div>
+  </td>
+</tr><tr data-year="2020" data-tags="建筑设计" data-title="设计札记（1）|  初入职场">
+  <td class="c-date">2020-08-28</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./设计札记（1）___初入职场/index.html" target="_blank" rel="noopener">设计札记（1）|  初入职场</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/MjXyuOJSWRU2h8oBGXp9Vg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">人越长大，藏之于心而不足为外人道的事就越多，有些是不想说，有些是不能说，于是，慢慢成了沉默的大多数。</div>
+  </td>
+</tr><tr data-year="2020" data-tags="随笔杂文" data-title="随笔 | 毕业杂记">
+  <td class="c-date">2020-07-10</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___毕业杂记/index.html" target="_blank" rel="noopener">随笔 | 毕业杂记</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/SEB5bc7MNinBiiXpX7-3hg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">人到了身份转换的时候，总是格外忙碌些。</div>
+  </td>
+</tr><tr data-year="2020" data-tags="随笔杂文" data-title="随笔 | 告别学生时代">
+  <td class="c-date">2020-06-22</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___告别学生时代/index.html" target="_blank" rel="noopener">随笔 | 告别学生时代</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/Ncn5qEV81UwtqByKnY09oA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">拿到硕士学位的这一年，我已经二十七岁了。如果将来有幸能活过一百岁，那也已经把四分之一最鲜活的生命留在了校园里。我没有办法去问值不值得，也有没有人能回答这个问题。</div>
+  </td>
+</tr><tr data-year="2020" data-tags="城市设计" data-title="城市设计札记（14）| 给envi-met的几点建议">
+  <td class="c-date">2020-05-22</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./城市设计札记（14）__给Envi_met的几点建议/index.html" target="_blank" rel="noopener">城市设计札记（14）| 给Envi-met的几点建议</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'城市设计')">城市设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/e3d5e7dyblNTVOmA6LWr6w" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">提意见人人都会，但真正解决却不是简单的事，也非一朝一夕能完成。只是希望提出的修改意见可以对软件的更新换代有帮助，让以后的使用者更加方便，也让城市热环境的研究之路越走越宽。毕竟，工欲善其事，必先利其器，在科学研究上，工具的重要性是不言而喻的。</div>
+  </td>
+</tr><tr data-year="2020" data-tags="随笔杂文" data-title="随笔 | 父母儿女的“相看两不厌”">
+  <td class="c-date">2020-05-09</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___父母儿女的_相看两不厌_/index.html" target="_blank" rel="noopener">随笔 | 父母儿女的“相看两不厌”</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/Q8_C2XO6gSE_JqwiFxSwNw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">在二十几岁这个年纪，跟父母和睦相处变成了一件很困难的事。</div>
+  </td>
+</tr><tr data-year="2020" data-tags="随笔杂文" data-title="随笔 | 不复相见">
+  <td class="c-date">2020-04-27</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___不复相见/index.html" target="_blank" rel="noopener">随笔 | 不复相见</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/1d3UQsp2ElIXsZlsN7EhIQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">逝者已矣，活着的人更要生机勃勃地活着……</div>
+  </td>
+</tr><tr data-year="2020" data-tags="城市设计" data-title="城市设计札记（12）| 论文终究要好好写完">
+  <td class="c-date">2020-03-19</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./城市设计札记（12）__论文终究要好好写完/index.html" target="_blank" rel="noopener">城市设计札记（12）| 论文终究要好好写完</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'城市设计')">城市设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/YcaRPQlXwJ35PUjZD6PipA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">只要天还没有塌，就要继续专注当下，绸缪未来，对于面临毕业的研究生来说，无疑就是把论文好好写完。</div>
+  </td>
+</tr><tr data-year="2020" data-tags="随笔杂文" data-title="随笔 | 碎片">
+  <td class="c-date">2020-02-25</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___碎片/index.html" target="_blank" rel="noopener">随笔 | 碎片</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/0tTq1zmn_YP6q-l7UVwjCQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">一旦习惯了不经过滤全盘接受，习惯了不假思索直奔主题，习惯了入耳入眼的信息全都毫无关系，毫无逻辑，短平快省，我们的精神世界就会沦为他人意志的跑马场。久而久之，我们放弃了主动思考的能力，也就放弃了自我超越机会。</div>
+  </td>
+</tr><tr data-year="2020" data-tags="随笔杂文" data-title="随笔 | 我为什么要搭建个人博客">
+  <td class="c-date">2020-02-12</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___我为什么要搭建个人博客/index.html" target="_blank" rel="noopener">随笔 | 我为什么要搭建个人博客</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/mTJnVplieabZI6QZBtfjUA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">一个人要不断充实自己的知识储备，否则迟早有一天，你将不再具有学习的能力和存在的价值。</div>
+  </td>
+</tr><tr data-year="2020" data-tags="随笔杂文" data-title="随笔 | 十五天">
+  <td class="c-date">2020-02-08</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___十五天/index.html" target="_blank" rel="noopener">随笔 | 十五天</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/KgTbLJuHxjoAyMW2ueACAw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">比起防疫一线的剑拔弩张，普通人的生活是寂静的，寂静得让人有些发狂。</div>
+  </td>
+</tr><tr data-year="2020" data-tags="读书笔记" data-title="读书笔记 i 《鼠疫》中的众生相">
+  <td class="c-date">2020-01-30</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./读书笔记_I__鼠疫_中的众生相/index.html" target="_blank" rel="noopener">读书笔记 I 《鼠疫》中的众生相</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'读书笔记')">读书笔记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/RATa9wuUd1Fpfm2GRnD9FA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">习惯于绝望的处境，是比绝望的处境本身更大的不幸。</div>
+  </td>
+</tr><tr data-year="2020" data-tags="随笔杂文" data-title="随笔 | 不出门的春节">
+  <td class="c-date">2020-01-26</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___不出门的春节/index.html" target="_blank" rel="noopener">随笔 | 不出门的春节</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/XbHZQFIPOZMMSzy2B9Z8Iw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">既然已经被困在家里了，与其恐慌焦虑、无所事事，不如静下来心来学习和工作。让这段被动的“居家禁闭”变成主动的“闭关修炼”。</div>
+  </td>
+</tr><tr data-year="2020" data-tags="城市设计" data-title="城市设计札记（11）——envi-met使用小结">
+  <td class="c-date">2020-01-08</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./城市设计札记（11）__ENVI_met使用小结/index.html" target="_blank" rel="noopener">城市设计札记（11）——ENVI-met使用小结</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'设计札记')">设计札记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/4QHp60uoKIRMQRssX2aKfA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">工具重要，但是使用工具的人更重要，知道怎么用重要，知道用来做什么更重要。</div>
+  </td>
+</tr><tr data-year="2020" data-tags="随笔杂文" data-title="随笔 | 2019与2020">
+  <td class="c-date">2020-01-01</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___2019与2020/index.html" target="_blank" rel="noopener">随笔 | 2019与2020</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/4cYUrxCgs7Q-V9l2RMl9qQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">天下事以难而废者十之一，以惰而废者十之九。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="随笔杂文" data-title="随笔 | 漫谈“师门”">
+  <td class="c-date">2019-12-15</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___漫谈_师门_/index.html" target="_blank" rel="noopener">随笔 | 漫谈“师门”</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/9QGx1waEO37bnwWYRmFCQg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">比起导师的学术造诣，名声地位，其实更应该看重的是这个老师愿不愿意花时间和精力去引导你，锻炼你，最终放飞你。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="读书笔记" data-title="读书笔记 | 《空谷幽兰》">
+  <td class="c-date">2019-11-26</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./读书笔记____空谷幽兰_/index.html" target="_blank" rel="noopener">读书笔记 | 《空谷幽兰》</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'读书笔记')">读书笔记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/1GOj0DnrbK542KT5mxkGCA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">有趣的是，只有当我们独处时，才会更清楚地意识到自己与万物同在。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="城市设计" data-title="城市设计札记（13） | 回归建筑设计">
+  <td class="c-date">2019-11-17</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./城市设计札记（13）___回归建筑设计/index.html" target="_blank" rel="noopener">城市设计札记（13） | 回归建筑设计</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'设计札记')">设计札记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/4FqwiijRjhQBriZMR5zmXA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">当一个人失去很多的时候，在人生选择上有些东西就变得不那么重要了。这一生，守住自己的赤子之心，守护好亲人和爱人，做出一点有价值有意义的事，已经是了不起的成就了。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="读书笔记" data-title="读书笔记 | 李银河的《人间采蜜记》">
+  <td class="c-date">2019-11-03</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./读书笔记___李银河的_人间采蜜记_/index.html" target="_blank" rel="noopener">读书笔记 | 李银河的《人间采蜜记》</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'读书笔记')">读书笔记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/Kec2IbBpnplN9L0LxpI2PA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我始终觉得，一个人的文字风格是从灵魂里带来的，是无论怎么修炼也修炼不出来的。就像人的长相一样，无论后天怎么加工，并不能改变原来的模样。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="读书笔记" data-title="读书笔记 | 《茶之书》">
+  <td class="c-date">2019-10-30</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./读书笔记____茶之书_/index.html" target="_blank" rel="noopener">读书笔记 | 《茶之书》</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'读书笔记')">读书笔记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/S6TuaRm0gCcGo1YO_HvZZw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">本质上、茶道是一种对“残缺”的崇拜，是在我们都明白不可能完美的生命中，为了成就某种可能的完美，所进行的温柔试探。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="西班牙游记" data-title="《一百五十九天》完结撒花">
+  <td class="c-date">2019-10-23</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天_完结撒花/index.html" target="_blank" rel="noopener">《一百五十九天》完结撒花</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/2oTPm2_qoAKUphR2rWGkUQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">既然逝去的日子不会再有，那就以此书来纪念我心中那个永恒的桃花源，纪念那些日月星辰，流光岁月。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="读书笔记" data-title="读书笔记 | 《乡关何处》">
+  <td class="c-date">2019-10-19</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./读书笔记____乡关何处_/index.html" target="_blank" rel="noopener">读书笔记 | 《乡关何处》</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'读书笔记')">读书笔记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/J852Z61shBlAx-eX-ZjKRg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">一个人在乱世的存在和选择，结识的每一个人或者身经的每一个事件，都可能埋下他一生宿命的伏笔。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="随笔杂文" data-title="随笔 | 在困境中选择">
+  <td class="c-date">2019-10-07</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___在困境中选择/index.html" target="_blank" rel="noopener">随笔 | 在困境中选择</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/IndpJqCvpOBI7rRjvjKnaw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">人是在什么时候长大的？对我而言，是在意识到人生困境的时候长大的。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="随笔杂文" data-title="随笔 | 填满">
+  <td class="c-date">2019-09-13</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___填满/index.html" target="_blank" rel="noopener">随笔 | 填满</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/FWDnFNFLBfSMK_KqQFjASw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">一个长年累月连轴转的人，会逐渐失去爱的能力，失去对周围一切的耐心和关注，这是件很可怕的事情。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="随笔杂文" data-title="寻常第三辑——《黄官何处》">
+  <td class="c-date">2019-08-29</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./寻常第三辑___黄官何处_/index.html" target="_blank" rel="noopener">寻常第三辑——《黄官何处》</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/JtpRz1GTqZRsa3OY8EEjiQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">从量变走到质变，要走很远很远，我们大多也都停在了半路。惟愿我能走一步，再走一步​……​</div>
+  </td>
+</tr><tr data-year="2019" data-tags="读书笔记" data-title="读书笔记 | 《万历十五年》">
+  <td class="c-date">2019-08-26</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./读书笔记____万历十五年_/index.html" target="_blank" rel="noopener">读书笔记 | 《万历十五年》</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'读书笔记')">读书笔记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/1rJLNPT18QMLQeB-hEdc2w" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">中国两千年来，以道德代替法制，至明代而极，这就是一切问题的症结……</div>
+  </td>
+</tr><tr data-year="2019" data-tags="随笔杂文" data-title="随笔 | 美则美矣">
+  <td class="c-date">2019-08-21</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___美则美矣/index.html" target="_blank" rel="noopener">随笔 | 美则美矣</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/DsOdxoL-fW8J9cOewgWQvw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">折腾了这么些年，有些事也才想明白，就几个字：稍加修饰，可行；脱胎换骨，慎重……</div>
+  </td>
+</tr><tr data-year="2019" data-tags="随笔杂文" data-title="随笔 | 泯然众人">
+  <td class="c-date">2019-07-30</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___泯然众人/index.html" target="_blank" rel="noopener">随笔 | 泯然众人</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/YC96DczpxKUpPCCtXoXHuA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">​我很想问问，那些曾经觉得自己是天之骄子的人，可以接受最终泯然众人吗？</div>
+  </td>
+</tr><tr data-year="2019" data-tags="城市设计" data-title="城市设计札记（10）| 关于arcgis">
+  <td class="c-date">2019-07-23</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./城市设计札记（10）__关于ArcGIS/index.html" target="_blank" rel="noopener">城市设计札记（10）| 关于ArcGIS</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'城市设计')">城市设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/GWCkUlkSHiq6tAvzBreMMw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">总而言之一句话，工具决定思维。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="读书笔记" data-title="读书笔记 | 《一九八四》">
+  <td class="c-date">2019-07-22</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./读书笔记____一九八四_/index.html" target="_blank" rel="noopener">读书笔记 | 《一九八四》</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'读书笔记')">读书笔记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/FHUoxjL2awnaZIRKwqDlbw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我们是活于盲从附和，寂寞荒凉岁月的人……</div>
+  </td>
+</tr><tr data-year="2019" data-tags="西班牙游记" data-title="《一百五十九天》 |  到此为止">
+  <td class="c-date">2019-07-18</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天_____到此为止/index.html" target="_blank" rel="noopener">《一百五十九天》 |  到此为止</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/f4imdKb3P7SlJsDpAE12wg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">走了那么远的路，好像才明白，与其追逐远方，不如缔造远方……</div>
+  </td>
+</tr><tr data-year="2019" data-tags="城市设计" data-title="城市设计札记（9）| 分析与设计，什么关系？">
+  <td class="c-date">2019-07-06</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./城市设计札记（9）__分析与设计_什么关系_/index.html" target="_blank" rel="noopener">城市设计札记（9）| 分析与设计，什么关系？</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'城市设计')">城市设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/Jxgyc5u6JAuajCkpg_o7rw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">趁着现在还可以不为其他，只为事情本身静下心来思考，总结一些行之有效的方法，结合一些熟能生巧的工具，往前多走一步便是一步。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="城市设计" data-title="城市设计札记（8）| 再谈研究生论文写作">
+  <td class="c-date">2019-06-26</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./城市设计札记（8）__再谈研究生论文写作/index.html" target="_blank" rel="noopener">城市设计札记（8）| 再谈研究生论文写作</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'城市设计')">城市设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/JrqOmf8iiSnA_ipRBpzHwA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">讲一次有一次的效果，听一次有一次的收获，才不至于白花了那些时间。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="城市设计" data-title="城市设计札记（7）| 旁听一场论文答辩">
+  <td class="c-date">2019-06-15</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./城市设计札记（7）__旁听一场论文答辩/index.html" target="_blank" rel="noopener">城市设计札记（7）| 旁听一场论文答辩</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'城市设计')">城市设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/nImDb6iOaHdk1RMZRpAGOw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我还是觉得设计是很界定的，灵感也很难被数字化。设计不能完全脱离常识，甚至有时候都不能脱离直觉。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="城市设计" data-title="城市设计札记（6）|《城市营造——21世纪城市设计的九项原则》">
+  <td class="c-date">2019-06-08</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./城市设计札记（6）__城市营造__21世纪城市设计的九项原则_/index.html" target="_blank" rel="noopener">城市设计札记（6）|《城市营造——21世纪城市设计的九项原则》</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'城市设计')">城市设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/P5KAWR7bLIE94EerNxcaZg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我觉得“城市营造”这个词特别好。营是经营，造是建造。这就意味着城市是一个动态变化的过程，不仅需要设计，还需要建造，更需要经营。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="随笔杂文" data-title="随笔 | 高考">
+  <td class="c-date">2019-06-02</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___高考/index.html" target="_blank" rel="noopener">随笔 | 高考</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/YS3CrU4uVHLI8yQGBeEX9g" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">坦诚地说，高中时候于我是难得的美好时光，但高考却是如今想来依旧痛苦的回忆。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="西班牙游记" data-title="《一百五十九天》下 | 巴塞罗那未完成">
+  <td class="c-date">2019-05-25</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天_下___巴塞罗那未完成/index.html" target="_blank" rel="noopener">《一百五十九天》下 | 巴塞罗那未完成</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/DaxbBG80i75VWV9cI6D8Mw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">住在城市中的人们，享受着城市规划的精彩，也忍受着城市规划的缺陷。那些穿梭于街头巷尾脚步匆匆的行人，永远都不会知道，也没兴趣知道，是谁的一笔，在无形之中拨动了自己一生的命运琴弦。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="读书笔记" data-title="读书笔记 | 一个人的《今生今世》">
+  <td class="c-date">2019-05-23</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./读书笔记___一个人的_今生今世_/index.html" target="_blank" rel="noopener">读书笔记 | 一个人的《今生今世》</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'读书笔记')">读书笔记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/H4bQUBgpu_r5PEHMoi0Lqg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">有人说：“胡兰成其人可废，其文不能废！”但如此之人，也只可读其文，不可近其人。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="西班牙游记" data-title="《一百五十九天》下 | 马约卡的帕尔马">
+  <td class="c-date">2019-05-15</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天_下___马约卡的帕尔马/index.html" target="_blank" rel="noopener">《一百五十九天》下 | 马约卡的帕尔马</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/yOujoXHSKNbH6lXSLM9ElA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">从公众号的阅读量我知道，看游记的人并不多，大家似乎更喜欢看教程。不管有没有人读，我还是要写。记录生活是件非常重要的事，人的一生很长，金钱、权利、荣誉，你的和我的并无区别，只有人生经历是独一份，完完全全属于自己。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="城市设计" data-title="城市设计札记（5）——写论文这件事">
+  <td class="c-date">2019-05-09</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./城市设计札记（5）__写论文这件事/index.html" target="_blank" rel="noopener">城市设计札记（5）——写论文这件事</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'城市设计')">城市设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/5Q_OUGpRj8hCZBEfxhRKWA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">如果结果很可能没有意义，那就努力让过程变得有意义好了。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="读书笔记" data-title="读书笔记 | 《尼采，在世纪的转折点上》">
+  <td class="c-date">2019-05-05</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./读书笔记____尼采_在世纪的转折点上_/index.html" target="_blank" rel="noopener">读书笔记 | 《尼采，在世纪的转折点上》</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'读书笔记')">读书笔记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/HkK91IWDTUkxKn38Nnfljw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">“我孤独了。” 啊，你配吗？</div>
+  </td>
+</tr><tr data-year="2019" data-tags="随笔杂文" data-title="随笔 | 逃无可逃">
+  <td class="c-date">2019-04-27</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___逃无可逃/index.html" target="_blank" rel="noopener">随笔 | 逃无可逃</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/8mSp2J85LHsEdHQNXaqX3Q" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我们早已逃无可逃，既然逃无可逃，不如转而勇敢面对，既在红尘里，又在红尘外，浮华纷乱之中必自有云淡风轻……</div>
+  </td>
+</tr><tr data-year="2019" data-tags="城市设计" data-title="城市设计札记（4）——记一场有启发的讲座">
+  <td class="c-date">2019-04-17</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./城市设计札记（4）__记一场有启发的讲座/index.html" target="_blank" rel="noopener">城市设计札记（4）——记一场有启发的讲座</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'城市设计')">城市设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/jaG5Gi0QLG0sWI2aGdzt4Q" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">但是依然有一些人，他们拿着微薄的报酬，做着不计回报的工作，这些设计虽然不曾惊天动地，却都是凝结了智慧与情怀的好作品。人活一世，就要把自己喜欢和认可的事做好，至于以后它是把你拖入无尽的深渊，还是为你带来无穷的金钱、荣誉和地位，那都是附属品。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="城市设计" data-title="城市设计札记（3）——软件到底学多少才够用？">
+  <td class="c-date">2019-04-13</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./城市设计札记（3）__软件到底学多少才够用_/index.html" target="_blank" rel="noopener">城市设计札记（3）——软件到底学多少才够用？</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'城市设计')">城市设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/rbTVEc4OPHqN6oi8RWo2aQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">很多东西我觉得有必要学，但学校并不会教。就像有人说的那样，大学就是大不了我自己学，所以到底应该以什么样的态度去对待学校的建筑教育，对待自己的成长历程，对待未来的毫无把握，我也不知道……</div>
+  </td>
+</tr><tr data-year="2019" data-tags="西班牙游记" data-title="《一百五十九天》下 | 马德里，从街头到巷尾">
+  <td class="c-date">2019-04-10</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天_下___马德里_从街头到巷尾/index.html" target="_blank" rel="noopener">《一百五十九天》下 | 马德里，从街头到巷尾</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/twAIFxRpUr__LBdeRyYd_Q" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">比起一见钟情，我更相信时间沉淀下来的回味，那些生命中普通的分分秒秒，留在了哪里，哪里就成了永恒的桃花源……</div>
+  </td>
+</tr><tr data-year="2019" data-tags="城市设计" data-title="城市设计札记（2）——初遇城市设计项目">
+  <td class="c-date">2019-03-31</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./城市设计札记（2）__初遇城市设计项目/index.html" target="_blank" rel="noopener">城市设计札记（2）——初遇城市设计项目</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'城市设计')">城市设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/HR6WyAIUiqCjUlOGH6xQIQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">如今学的浅，想的也不深，很多思考或者判断都是片面的，肤浅的，甚至是愚蠢的。但我不怕说出来，至少在目前的阶段，它是真实的，是可以讨论的，这就够了。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="西班牙游记" data-title="《一百五十九天》下 | 阳光里的格拉纳达">
+  <td class="c-date">2019-03-24</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天_下___阳光里的格拉纳达/index.html" target="_blank" rel="noopener">《一百五十九天》下 | 阳光里的格拉纳达</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/57fFpSZHSDO3bY8n-jhQmA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">有些人，你在分别的时候就知道，此生不会再见。他们曾经出现在你的生命里，带给你欢乐，然后将永远消失，不复归来……</div>
+  </td>
+</tr><tr data-year="2019" data-tags="西班牙游记" data-title="《一百五十九天》下 | 半年在upm学到了什么？">
+  <td class="c-date">2019-03-16</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天_下___半年在UPM学到了什么_/index.html" target="_blank" rel="noopener">《一百五十九天》下 | 半年在UPM学到了什么？</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/ZRYd0LNq-LJkXmlnVkRAmQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">游记写到这个份上，感觉除了换一个地方，也写不出什么新东西。不如缓一缓，回归到日常的学习生活中，聊聊在马德里理工上课的平凡日子里，那些珍贵的回忆。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="城市设计" data-title="城市设计札记（1）——空间句法备忘录">
+  <td class="c-date">2019-03-11</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./城市设计札记（1）__空间句法备忘录/index.html" target="_blank" rel="noopener">城市设计札记（1）——空间句法备忘录</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'设计札记')">设计札记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/5_p-zAO7rVIoVExrh6JDTA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">前几天帮老师做一个城市设计项目的空间句法分析，本以为一个下午就能搞定的事，拖了好几天。其间暴露出一些软件本身的问题，使用操作的问题，设计人员之间协同工作的问题等等，觉得有必要稍作小结。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="西班牙游记" data-title="《一百五十九天》下 | 回到雅典">
+  <td class="c-date">2019-03-03</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天_下___回到雅典/index.html" target="_blank" rel="noopener">《一百五十九天》下 | 回到雅典</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/JctNosxj_hXKN0mKfU01Pw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">回国以后整理照片和文字不是一件容易的事，因为有太多事情都比这件事更重要，也更紧急。想要放弃或是搁置，有千万个理由，但坚持做下去，却只需要一点执念。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="西班牙游记" data-title="《一百五十九天》| 从此时此刻到彼时彼刻">
+  <td class="c-date">2019-02-12</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天___从此时此刻到彼时彼刻/index.html" target="_blank" rel="noopener">《一百五十九天》| 从此时此刻到彼时彼刻</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/Wxt5ADENV0WbOg9mCdprQw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">之前那么多封信写的是此时此刻，是且行且看的即时反馈，从今往后，所写皆成了彼时彼刻，成了无法重演的过往与回忆。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="西班牙游记" data-title="《一百五十九天》| 除夕碎笔">
+  <td class="c-date">2019-02-05</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天___除夕碎笔/index.html" target="_blank" rel="noopener">《一百五十九天》| 除夕碎笔</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/dAHVPO1FrQLaWqePqZtfEw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">《论语.里仁》里说“父母在，不远游，游必有方”。我做不到前半句，只能在后半句上加以弥补了……</div>
+  </td>
+</tr><tr data-year="2019" data-tags="西班牙游记" data-title="《一百五十九天》| 行李">
+  <td class="c-date">2019-01-30</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天___行李/index.html" target="_blank" rel="noopener">《一百五十九天》| 行李</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/QFPGX31k5s7RDWz6V5DxVg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我突然意识到，人对于外界的依赖竟然如此之深。</div>
+  </td>
+</tr><tr data-year="2019" data-tags="西班牙游记" data-title="《一百五十九天》| 途中碎笔">
+  <td class="c-date">2019-01-21</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天___途中碎笔/index.html" target="_blank" rel="noopener">《一百五十九天》| 途中碎笔</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/RxpVtPYbC8O2IX-Salcmpw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">对我来说，地理上的离开，或许才会是精神上的归来……</div>
+  </td>
+</tr><tr data-year="2019" data-tags="西班牙游记" data-title="《一百五十九天》| 星空落日">
+  <td class="c-date">2019-01-04</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天___星空落日/index.html" target="_blank" rel="noopener">《一百五十九天》| 星空落日</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/1ciVw3ljocLwUAF-hEeFAw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">曾经有同学跟我说，美是力量。在这最后的星空和落日里，我能感觉的到……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="读书笔记" data-title="读书笔记 | 《乌合之众》">
+  <td class="c-date">2018-12-21</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./读书笔记____乌合之众_/index.html" target="_blank" rel="noopener">读书笔记 | 《乌合之众》</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'读书笔记')">读书笔记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/HrTYBCBuTL7r817DB7YqSQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">在这些我们能够明确观察到的现象背后，另有一些我们只能隐约看到的现象，而在它的背后，还有一些我们一无所知的现象……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="西班牙游记" data-title="《一百五十九天》| 灵魂之舞">
+  <td class="c-date">2018-12-14</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天___灵魂之舞/index.html" target="_blank" rel="noopener">《一百五十九天》| 灵魂之舞</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/Nezt6ssIUr4g0biMxpTpSQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">逃亡注定了“弗拉明戈”比其他舞种有着更多对生命的渴望，因为渴望，所以疯狂，因为疯狂，所以感动……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="西班牙游记" data-title="《一百五十九天》| 一叶知秋">
+  <td class="c-date">2018-12-01</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天___一叶知秋/index.html" target="_blank" rel="noopener">《一百五十九天》| 一叶知秋</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/KBBZhBS-4DwS2B_hlCdxPw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">叶黄了而草却绿了，我从未见过这样的景象，也只有地中海的气候才会如此吧。如今发现，马德里最美的时节原来是晚秋……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="西班牙游记" data-title="《一百五十九天》| 东到瓦伦西亚">
+  <td class="c-date">2018-11-11</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天___东到瓦伦西亚/index.html" target="_blank" rel="noopener">《一百五十九天》| 东到瓦伦西亚</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/aEJTtjasTR-hlBIr-jr70g" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我们在科学艺术城流连到不得不走的最后一分钟。说实话，到瓦伦西亚，看这个已然足够。很少有城市能够像瓦伦西亚这样，将公元前遥远的遗址和最先锋的现代建筑激烈碰撞、融汇并存，这是天时，是地利，更是人和……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="西班牙游记" data-title="《一百五十九天》| 从未听过la rioja">
+  <td class="c-date">2018-10-29</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天___从未听过La_Rioja/index.html" target="_blank" rel="noopener">《一百五十九天》| 从未听过La Rioja</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/98FZHTPtE51Vqice4b6PhQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">有人跟我说，葡萄酒酿造的时间越长，颜色也就越淡。我总觉得这是时光借着葡萄想告诉我们什么……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="西班牙游记" data-title="《一百五十九天》| 悬崖上的昆卡">
+  <td class="c-date">2018-10-14</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天___悬崖上的昆卡/index.html" target="_blank" rel="noopener">《一百五十九天》| 悬崖上的昆卡</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/q4ygVh6MCcNMdMaCc1Sokg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">平生第一次在悬崖之巅画画，脚下是万丈深谷，头顶是千顷流云……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="西班牙游记" data-title="《一百五十九天》 | 一月有余">
+  <td class="c-date">2018-10-10</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天____一月有余/index.html" target="_blank" rel="noopener">《一百五十九天》 | 一月有余</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/Gh0HzygNMt0uRBtgG6koGg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">一场秋雨一场凉，在哪里都一样……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="西班牙游记" data-title="《一百五十九天》| 马德里建筑周撷英（上）">
+  <td class="c-date">2018-10-07</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天___马德里建筑周撷英（上）/index.html" target="_blank" rel="noopener">《一百五十九天》| 马德里建筑周撷英（上）</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/Eq6fLWl1o15UBE9OZm6kwg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我们需要走近和走进一栋建筑，一件作品。那些发自内心的欢喜和赞叹，会经年累月化为对设计的虔诚……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="西班牙游记" data-title="《一百五十九天》| 三子同舟，泛泛其景">
+  <td class="c-date">2018-10-03</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天___三子同舟_泛泛其景/index.html" target="_blank" rel="noopener">《一百五十九天》| 三子同舟，泛泛其景</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/Hy6WxOQ3gdTI7_J5kRpipw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">桨吟橹咏丽池动，秋波灼烁影蒙茸；三子同舟何尽兴，一船清曲养疏慵……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="西班牙游记" data-title="《一百五十九天》| 东方未晞">
+  <td class="c-date">2018-09-30</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天___东方未晞/index.html" target="_blank" rel="noopener">《一百五十九天》| 东方未晞</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/B8X2bmig7M--q6Llvt3ClA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">早起是一件很痛苦的事情，想多睡一会儿有成千上万个理由，可起床需要的，只是一瞬间的勇气。</div>
+  </td>
+</tr><tr data-year="2018" data-tags="西班牙游记" data-title="《一百五十六天》| 暮辞塞戈维亚">
+  <td class="c-date">2018-09-24</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十六天___暮辞塞戈维亚/index.html" target="_blank" rel="noopener">《一百五十六天》| 暮辞塞戈维亚</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/O1q66oTRMR2NKREkIirKkQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">鸟雀在大渡槽的光影中追逐嬉戏，轻风触动岩间枯草，好似时光一如当年，好似罗马如在眼前。只是沧海桑田，历史的分量沉重地让人说不出话来。</div>
+  </td>
+</tr><tr data-year="2018" data-tags="西班牙游记" data-title="《一百五十九天》| 选课也不易">
+  <td class="c-date">2018-09-17</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天___选课也不易/index.html" target="_blank" rel="noopener">《一百五十九天》| 选课也不易</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/vKYd-QeT4ZlOf5W-VcYiCg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">这个世界很大，我不可能去到所有的地方，也不可能参与所有的事件，忘记远行，专注生活，简化心灵，才会有源源不断的生机与活力。</div>
+  </td>
+</tr><tr data-year="2018" data-tags="西班牙游记" data-title="《一百五十九天》| 乱七八糟的前几天">
+  <td class="c-date">2018-09-10</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天___乱七八糟的前几天/index.html" target="_blank" rel="noopener">《一百五十九天》| 乱七八糟的前几天</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/_JQt8O8qmns1E1xYUe_e3A" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">西班牙这边天气很好，清朗的日子里阳光格外明媚，再加上建筑的颜色多半是黄色、棕色、橘色，暖暖的，看起来就让人心境开朗。</div>
+  </td>
+</tr><tr data-year="2018" data-tags="西班牙游记" data-title="《一百五十九天》| 一日之差，一方之远">
+  <td class="c-date">2018-09-08</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天___一日之差_一方之远/index.html" target="_blank" rel="noopener">《一百五十九天》| 一日之差，一方之远</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/cFj_sl2Qu94Ap5Ox_iU6pA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">不愿染是与非，怎奈事与愿违。命运的伏笔转，时光它去又回。一路辗转，一身尘灰，一日之差换一方之远……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="西班牙游记" data-title="《一百五十九天》 | 开始给你写信">
+  <td class="c-date">2018-09-03</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_一百五十九天____开始给你写信/index.html" target="_blank" rel="noopener">《一百五十九天》 | 开始给你写信</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'西班牙游记')">西班牙游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/2wLU-tbCOKLwsBV621Q9qA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">明天就要乘飞机去西班牙了，凌晨一点多起飞，我下午就要从学校出发。虽然行李还没收拾好，却想先给你写一封信。</div>
+  </td>
+</tr><tr data-year="2018" data-tags="随笔杂文" data-title="随笔 | 黄官何处">
+  <td class="c-date">2018-08-18</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___黄官何处/index.html" target="_blank" rel="noopener">随笔 | 黄官何处</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/FbHdyqKXmu6s5PJfVGGTFw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">人总要能被什么感动，也总要能够去感动他人，否则，把自己炼成一颗顽石，纵使无坚不摧，又有什么意思呢……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="读书笔记" data-title="读书笔记 | 枪炮，病菌与钢铁">
+  <td class="c-date">2018-07-09</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./读书笔记___枪炮_病菌与钢铁/index.html" target="_blank" rel="noopener">读书笔记 | 枪炮，病菌与钢铁</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'读书笔记')">读书笔记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/ABIQtHsYjsgaRp_Hjj-2hA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">历史好像是一位从来都不会着急的编剧，有时候一个伏笔埋上千年万年，还依然在酝酿之中……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="随笔杂文" data-title="随笔 | 白色的夹竹桃">
+  <td class="c-date">2018-06-23</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___白色的夹竹桃/index.html" target="_blank" rel="noopener">随笔 | 白色的夹竹桃</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/QUQ0CM1rWPXNiPzB8uau8w" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">叶影参差，花影迷离，风移影动，珊珊可爱……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="建筑设计" data-title="关于“研究生”的碎笔闲言（一）">
+  <td class="c-date">2018-06-07</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./关于_研究生_的碎笔闲言（一）/index.html" target="_blank" rel="noopener">关于“研究生”的碎笔闲言（一）</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/TqEi2l6BPRz0HpbWI-mnlg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">科研是For itself，艺术是For me，而设计是For you……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="随笔杂文" data-title="随笔 ｜ 从笔尖到台上">
+  <td class="c-date">2018-05-22</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___从笔尖到台上/index.html" target="_blank" rel="noopener">随笔 ｜ 从笔尖到台上</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/j2PRgOo9Fmxqve3rbjEhrg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">莫问前程凶吉，但求落幕无悔……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="建筑设计" data-title="天赋不够，如何做合格的设计?">
+  <td class="c-date">2018-04-21</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./天赋不够_如何做合格的设计_/index.html" target="_blank" rel="noopener">天赋不够，如何做合格的设计?</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/HfbeesMuu7nTRicXa0fiJA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我们其实很难从别人的经验里去学习，自己想明白，比任何人告诉你都更有效……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="游记" data-title="春生，同里">
+  <td class="c-date">2018-04-13</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./春生_同里/index.html" target="_blank" rel="noopener">春生，同里</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'游记')">游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/IYmQxrdXHCkQci0bPvZPsQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">从小到大，长辈总是告诉我要成为一个优秀的人，可是在内心深处，我想要的从来都不是优秀，而是自由的灵魂，是真诚而透彻的生命……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="美国游记" data-title="《彼岸西东》——上海，归去来兮">
+  <td class="c-date">2018-03-21</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_彼岸西东___上海_归去来兮/index.html" target="_blank" rel="noopener">《彼岸西东》——上海，归去来兮</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'美国游记')">美国游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/jp4Xz1hms8qQIn39mYTr_w" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">每次出游回来都是要整理游记的，这是雷打不动的习惯。本来应该按照时间顺序，从西雅图一篇篇写到波士顿。可这一次，我想先写后记，至于途中发生过什么，慢慢再想，想不起来的，就任凭其沉淀到记忆的深谷之中去……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="美国游记" data-title="《彼岸西东》——华盛顿一日之期">
+  <td class="c-date">2018-03-14</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_彼岸西东___华盛顿一日之期/index.html" target="_blank" rel="noopener">《彼岸西东》——华盛顿一日之期</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'美国游记')">美国游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/9s7O0vl35h9CA2yYjiRN3Q" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">没有匆匆忙忙地拍照留念，没有慌慌张张地走马观花，就坐下来看小孩逗小狗，看少年放风筝，看情侣双双对对，十指相扣，看飞鸟栖息在阳光下，湖水里，树丛中，羽毛微微抖动，身躯却一动不动。我也会想，它们看到的世界，到底是一个怎样的世界呢……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="美国游记" data-title="彼岸西东——底特律千里归来">
+  <td class="c-date">2018-03-09</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./彼岸西东__底特律千里归来/index.html" target="_blank" rel="noopener">彼岸西东——底特律千里归来</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'美国游记')">美国游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/XxnKThZ4v4sNk0msuzUJcw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">可能真的是命运的安排，让一个人先看看什么是荒凉，才更能理解什么是繁华；先体会什么是无所依靠，才更能知道什么是自由独立……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="美国游记" data-title="彼岸西东——洛杉矶一波又起">
+  <td class="c-date">2018-03-02</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./彼岸西东__洛杉矶一波又起/index.html" target="_blank" rel="noopener">彼岸西东——洛杉矶一波又起</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'美国游记')">美国游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/UAmm5aPxSYnUFBmuOHBSDA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我觉得好困好困，但是却累得睡不着。只希望到西雅图能够顺利找到失踪的行李，只希望后面的行程没有这么波折，或者至少希望我还能在新的突发状况面前保持清醒和淡定……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="美国游记" data-title="彼岸西东——洛杉矶生死时速">
+  <td class="c-date">2018-02-21</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./彼岸西东__洛杉矶生死时速/index.html" target="_blank" rel="noopener">彼岸西东——洛杉矶生死时速</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'美国游记')">美国游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/XIxpxbAFAu-BjrL_9id-Jw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">生活总是给我意想不到的惊喜，不，应该说是惊吓。本来美国之行，洛杉矶根本不在考虑范围之内，结果却意外地变成了“开门红”。</div>
+  </td>
+</tr><tr data-year="2018" data-tags="随笔杂文" data-title="随笔 | 围炉">
+  <td class="c-date">2018-02-18</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___围炉/index.html" target="_blank" rel="noopener">随笔 | 围炉</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/J_3Ge5xY0nUq1XyupfOE4Q" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">不管时代如何巨变，也无论是亲人、恋人还是友人，近在咫尺的陪伴和交流是任何短信微信甚至是电话视频所无法替代的。很多你觉得不重要的，没有用的，或许才是最应该放在心上的……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="随笔杂文" data-title="晚逐冬雪入杭城">
+  <td class="c-date">2018-01-28</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./晚逐冬雪入杭城/index.html" target="_blank" rel="noopener">晚逐冬雪入杭城</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/DrptN22J2OImonkppnjdDQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">愿以天下景，换君一回眸……</div>
+  </td>
+</tr><tr data-year="2018" data-tags="美国游记" data-title="彼岸西东（序）——签证这件事">
+  <td class="c-date">2018-01-16</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./彼岸西东（序）__签证这件事/index.html" target="_blank" rel="noopener">彼岸西东（序）——签证这件事</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'美国游记')">美国游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/GZCm_ezmJIHheWVW0ETDpg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">未知总是会让人焦虑，只有尘埃落定，才会有片刻轻松。</div>
+  </td>
+</tr><tr data-year="2018" data-tags="城市设计" data-title="重读《美国大城市的死与生》">
+  <td class="c-date">2018-01-01</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./重读_美国大城市的死与生_/index.html" target="_blank" rel="noopener">重读《美国大城市的死与生》</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'城市设计')">城市设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/u45EKPEjfNk_y3KGhVXNog" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">中国积贫积弱百年，太渴望发展自己，证明自己，我们的城市正在以超快的速度建设，人们还来不及仔细思考就要急着追赶，可人总不能一直跑。“快”有时候不见得是好事，因为你没有时间从过去的错误中慢慢总结学习，一旦木已成舟，再难转舵。</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="寻常第二辑——从《初见》到《渐渐》">
+  <td class="c-date">2017-12-22</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./寻常第二辑__从_初见_到_渐渐_/index.html" target="_blank" rel="noopener">寻常第二辑——从《初见》到《渐渐》</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/8SJDf9vAobXhs4FtqpkHQA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">一个人一生能坚持做下去的事情很少；能单纯为了自己的欢喜而做的事情也很少；能为了自己的欢喜坚持做一生的事情，有一件也就足够了。</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="随笔 | 老屋">
+  <td class="c-date">2017-11-29</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___老屋/index.html" target="_blank" rel="noopener">随笔 | 老屋</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/B7AdRlgsipSX9jWCmBc0YA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">这么多年，我眼见了故土乡村的日渐落寞，但却无能为力。中国的传统文化，多半是由乡村孕育出来的，乡村的失语必然会导致传统的静默。在我的故乡，人们就这样埋葬了一个人，又一个人，就这样在悄无声息中埋葬了过去所有的记忆，也埋葬了整整一个时代的印记……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="游记" data-title="复相逢——苏州随笔（下）">
+  <td class="c-date">2017-11-22</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./复相逢__苏州随笔（下）/index.html" target="_blank" rel="noopener">复相逢——苏州随笔（下）</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'游记')">游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/emYW8uiI7USjL7Jrwdw2mQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">山墙在常年的风雨侵蚀下显得霉迹斑斑，电线杆子直挺挺地靠墙而立，细长的黑色电线像游丝一般或纠缠或漂浮在寒气里。</div>
+  </td>
+</tr><tr data-year="2017" data-tags="游记" data-title="复相逢——苏州随笔（上）">
+  <td class="c-date">2017-11-21</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./复相逢__苏州随笔（上）/index.html" target="_blank" rel="noopener">复相逢——苏州随笔（上）</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'游记')">游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/QpkNcXOKZ_mSIlAxVKjEHA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">上次去是海棠花开的春日，这次来是寒气渐沉的初冬，同样的园子，别样的景致。唯一不变的是摩肩接踵的游人。</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="“优秀”的陷阱">
+  <td class="c-date">2017-11-12</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_优秀_的陷阱/index.html" target="_blank" rel="noopener">“优秀”的陷阱</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/IzmCMsN-xhkxQM9l0UL2lA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我只是在想，大众所谓的“优秀”或许成为了一个温柔的陷阱，这种陷阱可以让人在无意识之中变得盲目而单一，忘记了自己到底是谁，忘记了自己到底真正需要什么。</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="散文 | 形色">
+  <td class="c-date">2017-11-04</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./散文___形色/index.html" target="_blank" rel="noopener">散文 | 形色</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/-xrvdSRTnbfBMjUSO73BJA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">花入诗，入画，入歌，入酒，入茶，更入了人心。我想这世间形色，最美亦不过如此吧。</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="随笔 | 忙">
+  <td class="c-date">2017-10-10</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___忙/index.html" target="_blank" rel="noopener">随笔 | 忙</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/5w_odxoNAuzRELiJvo8J5A" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我不希望自己在日复一日的忙绿中变成一只目光呆滞，负重前行的龟。否则，忙碌只能成为消磨生命的磨盘，直到你成为生活的傀儡。</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="随笔 | 寝室">
+  <td class="c-date">2017-09-23</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___寝室/index.html" target="_blank" rel="noopener">随笔 | 寝室</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/RnqKLOmtliU0vP8bhvZdDA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">毕竟那么多日日夜夜，我们的钥匙插进同一个锁眼，衣服挂在同一个阳台，在同一间房里入梦，在同一间房里醒来，这就是情分。</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="随笔 | 选择焦虑症">
+  <td class="c-date">2017-09-16</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___选择焦虑症/index.html" target="_blank" rel="noopener">随笔 | 选择焦虑症</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/y1euZG_B-XtQuL5foc8mKA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">人生需要选择的时刻有千千万，无可选择的境遇更是数不清，纠结，该是生命的常态吧。</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="随笔 | 又到上海">
+  <td class="c-date">2017-09-05</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___又到上海/index.html" target="_blank" rel="noopener">随笔 | 又到上海</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/R8koZhRKQ9dGDtaUhIUPTQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我不知道自己将会在上海面临什么，也不知道真实的上海到底是否如我所想。心里不安，但也不怕。</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="随笔 | 聊天">
+  <td class="c-date">2017-08-30</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___聊天/index.html" target="_blank" rel="noopener">随笔 | 聊天</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/-GCLx6oHvMofEFl0D_5_qA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">在这个世界上，人每天要说的话很多，但真正能好好说话的机会却很少。生活变得越来越热闹，我们却越发找不到可以好好说话的人。</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="答读者问">
+  <td class="c-date">2017-08-19</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./答读者问/index.html" target="_blank" rel="noopener">答读者问</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/2oAdwBu1ylp-iMJi9-E9qA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">如果有一天你也发现了记录生活的乐趣，或许可以尝试随便写点什么，不需要写得很好，也不需要有逻辑，只是一种诚实的记录和交流，慢慢地，也许你就离不开这支笔了。</div>
+  </td>
+</tr><tr data-year="2017" data-tags="读书笔记" data-title="兵家气度 ——《孙子兵法》读书笔记">
+  <td class="c-date">2017-08-16</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./兵家气度____孙子兵法_读书笔记/index.html" target="_blank" rel="noopener">兵家气度 ——《孙子兵法》读书笔记</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'读书笔记')">读书笔记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/o7FKAO8c20Zhr8suAzGYGw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">如今，读《孙子兵法》并非为行军打仗，只要能从内心荡涤出一股英气，不为斗筲之辈，不为莽夫之徒，以更深远的视角和更开阔的胸襟去看待人和事，足矣。</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="随笔 | 人间烟火">
+  <td class="c-date">2017-08-10</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___人间烟火/index.html" target="_blank" rel="noopener">随笔 | 人间烟火</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/E1Z7pgDmhUIJ_1nKkrJN3Q" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">以前总认为“不食人间烟火”很美，我现在却觉得，有烟火气才更可爱，也更完整。世间琐碎的确会分散人的精力，消磨人的锐气，但也最接近生活的本质。而生活又是一个太大的命题，远比文字精彩，远比书本深刻……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="随笔 | 晚凉">
+  <td class="c-date">2017-07-27</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___晚凉/index.html" target="_blank" rel="noopener">随笔 | 晚凉</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/HXoIUEA7SZkUDwrHbpLI6g" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">小城无大事，茶米油盐家长里短已经足够人们从清晨忙到黄昏了，当凉夜如期而至的时候，以江风为伴，流水为朋，也就不负这盛夏时光了……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="浙些年 | 少年游">
+  <td class="c-date">2017-07-24</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./浙些年___少年游/index.html" target="_blank" rel="noopener">浙些年 | 少年游</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/hMWT1aZ2gINgTXoMPl_F8w" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">在学中酝酿千里之行的底气；在玩中寻求学以致用的时机。两者相辅相成，便能学的更从容，走的更自在……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="浙些年 | 出发的犹疑">
+  <td class="c-date">2017-07-20</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./浙些年___出发的犹疑/index.html" target="_blank" rel="noopener">浙些年 | 出发的犹疑</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/uCb1ljO1hj7Vwr9BZG2O5Q" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">一边出发，一边犹疑，乃是常人之常态，只要还在想，还在试，就还可以改变，就还有力量……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="建筑设计" data-title="定格 | 西湖掠影">
+  <td class="c-date">2017-07-10</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./定格___西湖掠影/index.html" target="_blank" rel="noopener">定格 | 西湖掠影</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/c10MlbhH5l5Bdtx7MXTpNw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">有些风景太熟悉了，反而入不了眼，也入不了心。只有隔着时间想，隔着距离看，才恍然明白什么叫“当时只道是寻常”……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="随笔 | 三年十班">
+  <td class="c-date">2017-07-09</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___三年十班/index.html" target="_blank" rel="noopener">随笔 | 三年十班</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/eqHzqXmANvuOwnFmV1wb2g" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我推门进去的时候，空空的教室里排着整齐的桌椅板凳，讲台上，一位男老师在用力擦黑板，每擦一下，就划出一道若有若无的白色印痕。</div>
+  </td>
+</tr><tr data-year="2017" data-tags="游记" data-title="游记 | 南浔">
+  <td class="c-date">2017-07-06</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./游记___南浔/index.html" target="_blank" rel="noopener">游记 | 南浔</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'游记')">游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/JDmIGQms6nyMxjuRMoISKw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">江南总是让人神往，而缀上“水乡”二字，就更是逼得人浮想联翩。满心满眼皆是“春雨如酥润江南，桐油纸伞撑玉兰”的温婉……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="随笔 | 毕业歌">
+  <td class="c-date">2017-07-01</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___毕业歌/index.html" target="_blank" rel="noopener">随笔 | 毕业歌</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/RUuV1gFrc2NriMSagCqbNQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">屈原在《九歌·少司命》里唱到：“悲莫悲兮生别离,乐莫乐兮新相知”。在每一个人生的转折点上，我们都要忍受“生别离”，但也都会期待“新相知”。前路漫漫，纵使千回百转，惟愿海阔天空……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="澳洲游记" data-title="《适彼南国，逢其夏末》">
+  <td class="c-date">2017-06-23</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_适彼南国_逢其夏末_/index.html" target="_blank" rel="noopener">《适彼南国，逢其夏末》</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'澳洲游记')">澳洲游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/q7Ixc6sAqKF5qZHzfNYuKg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">曾经向北飞八千里赴雪国芬兰，而后向南飞八千里遇夏末澳洲。这其间，似乎有什么力量在冥冥之中牵引，我却无从知晓……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="游记" data-title="游记 | 泊秦淮">
+  <td class="c-date">2017-06-21</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./游记___泊秦淮/index.html" target="_blank" rel="noopener">游记 | 泊秦淮</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'游记')">游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/-GmhkfGzKMCboTlhleY3rA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">船泊在夫子庙的码头，我们离船上岸，却依旧频频回望，竟是那般不愿离开。我总觉得，到了这繁华的极点，再往前走就是注定是荒凉了……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="游记" data-title="游记 | 从清昭陵到明孝陵（下）">
+  <td class="c-date">2017-06-18</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./游记___从清昭陵到明孝陵（下）/index.html" target="_blank" rel="noopener">游记 | 从清昭陵到明孝陵（下）</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'游记')">游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/eF_aF178hXbNJUHEFXurfg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">十里皇墙，百千驻军，重重殿宇，杳杳烟云，如若仅仅是被囚于几页苍凉浅薄的白纸之上，丢掉血肉筋骨，失掉气度精魂，又怎么能让人刻骨铭心呢……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="游记" data-title="游记 | 从清昭陵到明孝陵（上）">
+  <td class="c-date">2017-06-15</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./游记___从清昭陵到明孝陵（上）/index.html" target="_blank" rel="noopener">游记 | 从清昭陵到明孝陵（上）</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'游记')">游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/TVpky5n21bwM3MZ7Yj80Ig" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">只身立于昭陵的方城之中，飞鸟流云在上，青砖古石在下。抬眼北望，那埋在黄土里的是皮囊，埋在时间里的是血泪……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="随笔 | 深耕">
+  <td class="c-date">2017-06-12</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___深耕/index.html" target="_blank" rel="noopener">随笔 | 深耕</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/T4VTnb5ogfPtzaEDVavWvw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">细细想想，或许才华真的是无稽之谈。有的，只是一个偶然的契机和无数次切磋琢磨的诚意……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="随笔 | 原点">
+  <td class="c-date">2017-05-31</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___原点/index.html" target="_blank" rel="noopener">随笔 | 原点</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/rEUMo5OTbVxAyxjzqJ9afQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">人一旦长大，就必定有所忍受，有所承载，而那些繁华喧天的童年岁月，从此跫音渐远……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="小说 | 留白">
+  <td class="c-date">2017-05-25</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./小说___留白/index.html" target="_blank" rel="noopener">小说 | 留白</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'其他')">其他</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/8l9533iE8Ck6BbxFXcN6Xg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">世界这么大，路那么长，可是原谅我，你我之间，我现在只能选择留白……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="建筑设计" data-title="随笔 | 佳凝">
+  <td class="c-date">2017-05-20</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___佳凝/index.html" target="_blank" rel="noopener">随笔 | 佳凝</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/n_eaIau9S-wF4u7wIcAH5A" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我找不到有关佳凝的任何资料，不知建造年代，也不知出自谁手。偏居一隅，罕有人迹，反而赋予了它别样的气质。</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="随笔 | 東">
+  <td class="c-date">2017-05-12</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___東/index.html" target="_blank" rel="noopener">随笔 | 東</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/t51nMgC-fb2z6BGvI4l9Fw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">他让我求的是“人间世”，而我想要的却是“逍遥游”。后来才觉得自己太肤浅，若无“人间世”，何谈“逍遥游”。</div>
+  </td>
+</tr><tr data-year="2017" data-tags="芬兰游记" data-title="《北方以北》">
+  <td class="c-date">2017-04-26</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./_北方以北_/index.html" target="_blank" rel="noopener">《北方以北》</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'芬兰游记')">芬兰游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/TVQ-5Oa2cMzJ3E7yfaKEgg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我也惟愿以此，时刻提醒自己，莫要最后赢了世界，却丢了初心……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="随笔 | 读">
+  <td class="c-date">2017-04-18</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___读/index.html" target="_blank" rel="noopener">随笔 | 读</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/mpNfW-W9MQwT0duYZtbVvg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">从不再被人逼着“读书”的那个时候开始，才是我真正读书的起点。</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="随笔 | 渐渐">
+  <td class="c-date">2017-04-10</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___渐渐/index.html" target="_blank" rel="noopener">随笔 | 渐渐</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/6ntfI6eZUg6nk9-QoEZXFA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">很多“渐渐”的故事，最终也都以“突然”收场，因为我们总记不得那漫长而微渺的变更，只记得开头和结尾……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="澳洲游记" data-title="适彼南国，逢其夏末 | 浅忆悉尼（二）">
+  <td class="c-date">2017-03-29</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./适彼南国_逢其夏末___浅忆悉尼（二）/index.html" target="_blank" rel="noopener">适彼南国，逢其夏末 | 浅忆悉尼（二）</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'澳洲游记')">澳洲游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/f05UbAghX3XO7VTZdVXlig" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">昔日共沐晴雨风光，来年各忆浮世骄阳，
+浅聚于夏末未央，恒不负心之所向……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="随笔 | 突然想谈谈环保">
+  <td class="c-date">2017-03-22</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___突然想谈谈环保/index.html" target="_blank" rel="noopener">随笔 | 突然想谈谈环保</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/589SVyIhebwlFFds-OXNkA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">说到底，环保跟你跟我都有关系，毕竟，如果连一口新鲜的空气都呼吸不上，连一方清澈的蓝天都仰望不了，那生活又有什么乐趣可言呢……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="澳洲游记" data-title="适彼南国，逢其夏末 | 吉隆坡13小时">
+  <td class="c-date">2017-03-14</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./适彼南国_逢其夏末___吉隆坡13小时/index.html" target="_blank" rel="noopener">适彼南国，逢其夏末 | 吉隆坡13小时</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'澳洲游记')">澳洲游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/x_KdmFo7d-v4O5Oi68xH3A" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">不知道为什么，我一直以为吉隆坡在新加坡。还打算从悉尼回国在吉隆坡转机的时候办个落地签，也算是到了一趟新加坡。学妹疑惑地问我，吉隆坡不是在马来西亚吗？我才发现自己又犯傻了。</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="杂文 | 半城春雪">
+  <td class="c-date">2017-03-10</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./杂文___半城春雪/index.html" target="_blank" rel="noopener">杂文 | 半城春雪</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/pgfqjHIM6___MTnOLre_bQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">如同这座城市，在经历辉煌之后无奈地走向没落，但依旧能从漫长的寒冬中获得向死而生的勇气，只要还有改变的勇气，总有一日会云消雨霁，春暖花开……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="澳洲游记" data-title="适彼南国，逢其夏末 | 浅忆悉尼（一）">
+  <td class="c-date">2017-03-04</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./适彼南国_逢其夏末___浅忆悉尼（一）/index.html" target="_blank" rel="noopener">适彼南国，逢其夏末 | 浅忆悉尼（一）</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'澳洲游记')">澳洲游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/_-DInepkDInAhkuZWoDd4A" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">对我来说，这一场旅程早就开始于未出发之前，而终究会结束于归来许久之后……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="澳洲游记" data-title="适彼南国，逢其夏末 | 黄昏遇见墨尔本">
+  <td class="c-date">2017-02-23</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./适彼南国_逢其夏末___黄昏遇见墨尔本/index.html" target="_blank" rel="noopener">适彼南国，逢其夏末 | 黄昏遇见墨尔本</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'澳洲游记')">澳洲游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/P1o5km6kJvB-9DsxNLwxdg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我从未料到，关于墨尔本的记忆会被定格在夕阳与灯海之中。不过这样很好。那些铭刻于灵魂深处的美好，不全是心心念念的追逐，或许也可以是误打误撞的遇见。</div>
+  </td>
+</tr><tr data-year="2017" data-tags="澳洲游记" data-title="适彼南国，逢其夏末 | 从大洋路说起">
+  <td class="c-date">2017-02-19</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./适彼南国_逢其夏末___从大洋路说起/index.html" target="_blank" rel="noopener">适彼南国，逢其夏末 | 从大洋路说起</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'澳洲游记')">澳洲游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/wTSWBVrSCocvu8zw6GW3Wg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">额外得到的夏天，总是要还回去的。</div>
+  </td>
+</tr><tr data-year="2017" data-tags="随笔杂文" data-title="寻常第一辑 | 初见">
+  <td class="c-date">2017-01-25</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./寻常第一辑___初见/index.html" target="_blank" rel="noopener">寻常第一辑 | 初见</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/H2srh-AAUN5IrEBZV8dPFQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">以后能写多久，写多少，我不知道。我只知道，人都是健忘的，所以生活需要被记录和整理，否则，对不起年年岁岁我走过的路，也对不起岁岁年年陪伴过我的人……</div>
+  </td>
+</tr><tr data-year="2017" data-tags="芬兰游记" data-title="芬兰回忆录 | 落幕之后">
+  <td class="c-date">2017-01-06</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./芬兰回忆录___落幕之后/index.html" target="_blank" rel="noopener">芬兰回忆录 | 落幕之后</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'芬兰游记')">芬兰游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/cGN2c1X0J8aAGdnI_qrJgg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">当一切都回归正轨，我开始慢慢学着理解“寻常”的含义。一场精妙绝伦的戏剧落幕之后，真正的生活才刚刚开始。如若看不到平凡的意义，也就无从捕捉非凡的价值，这是我对芬兰回忆录所做的最后的注脚……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="随笔 | 三人行">
+  <td class="c-date">2016-12-30</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___三人行/index.html" target="_blank" rel="noopener">随笔 | 三人行</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/D-MG1UnlG-xWiaz_5W1jJA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">能够三人同行，相与谈笑的短暂时光是那样弥足珍贵。但最深的感情往往最不起眼，也往往排在最后，我也总是在忙完课业，看完电影，洗完衣服，聊完微信之后，才会突然想到，爸妈现在在做什么呢……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="芬兰游记" data-title="芬兰回忆录 | 秋风吹过的图尔库">
+  <td class="c-date">2016-12-24</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./芬兰回忆录___秋风吹过的图尔库/index.html" target="_blank" rel="noopener">芬兰回忆录 | 秋风吹过的图尔库</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'芬兰游记')">芬兰游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/lgfS9r1wY-K_DqAjPnq4NQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">秋天总是带着晴朗飘逸的味道，而故都也给人无限的留恋与怀想。那故都的秋日就更是难得。在秋风正好吹过的时节，我想去图尔库，一座芬兰的旧都。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="芬兰游记" data-title="芬兰回忆录 | suomenlinna的冬与夏">
+  <td class="c-date">2016-12-13</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./芬兰回忆录___Suomenlinna的冬与夏/index.html" target="_blank" rel="noopener">芬兰回忆录 | Suomenlinna的冬与夏</a><span class="tag" onclick="filterTag(this,'芬兰游记')">芬兰游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/ZAVzBDH8BBM7vRM2sRG4FA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">Suomenlinna的冬与夏，一年年交替上演，绿了春草，白了冬叶。在时间的眼里，什么都是微不足道的，那些能与时光并肩而立的城堡与砖石，或许才略微懂得生命的匆匆……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="芬兰游记" data-title="芬兰回忆录 | 出海">
+  <td class="c-date">2016-12-02</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./芬兰回忆录___出海/index.html" target="_blank" rel="noopener">芬兰回忆录 | 出海</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'芬兰游记')">芬兰游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/jSj98hAMLG-c4QI8JKqXdw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我曾经说过，芬兰是好山好水好无聊，现在我收回后半句。其实无聊的只是我自己，无关这山水，也无关那时光……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="随笔 | 如人饮水">
+  <td class="c-date">2016-11-26</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___如人饮水/index.html" target="_blank" rel="noopener">随笔 | 如人饮水</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/Fn0IzhHmKNU51vup2Nm0rg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">有一句古语我特别喜欢，“如人饮水，冷暖自知”。既是自知，当须自寻。以后的路很长，虽然当下，我的心之所向和情之所系都在遥远的看不见的地方，但我知道，至少自己在路上……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="芬兰游记" data-title="芬兰回忆录 | 仓促之行，意外之喜">
+  <td class="c-date">2016-11-14</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./芬兰回忆录___仓促之行_意外之喜/index.html" target="_blank" rel="noopener">芬兰回忆录 | 仓促之行，意外之喜</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'芬兰游记')">芬兰游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/Fm7wfAdonnAlza8iGxJ2Uw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">人生如同旅途，很多时候都难免要仓促出发。但这又何妨，正因为毫无准备，所以才会于路途之中遇到惊喜。这惊喜是生活善意的馈赠，悉心收着就好。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="芬兰游记" data-title="芬兰回忆录 | 海那边的塔林">
+  <td class="c-date">2016-11-05</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./芬兰回忆录___海那边的塔林/index.html" target="_blank" rel="noopener">芬兰回忆录 | 海那边的塔林</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'芬兰游记')">芬兰游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/26NKtymNTUAkdtdgTZHprA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">人就是这么矛盾，不断在流浪和回归中反复折腾，不得停歇。四方奔波的时候想家里的粗茶淡饭，困在一隅又想着诗和远方。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="随笔 | 原来是你">
+  <td class="c-date">2016-10-30</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___原来是你/index.html" target="_blank" rel="noopener">随笔 | 原来是你</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/88auj0ipuNDQII5S9jN-_Q" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">但愿你我都不误浮世骄阳，看尽人间万象，在经历过诸多犹豫与彷徨之后，能发自内心地惊喜地说一句，最终陪我的人，原来是你。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="芬兰游记" data-title="芬兰回忆录 | 从哥本哈根到欧登塞">
+  <td class="c-date">2016-10-23</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./芬兰回忆录___从哥本哈根到欧登塞/index.html" target="_blank" rel="noopener">芬兰回忆录 | 从哥本哈根到欧登塞</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'芬兰游记')">芬兰游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/vVeg7lZ2hpzPUeeHFVokCw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">所有的片段，都织成密密的回忆，每想一遍，就织得更紧一些。虽然过去很久，闲下的时候，还是想找人说说，说说那些或许一生就只见一次的人和事，物和景……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="纪念册 | 三年之期，一生所系">
+  <td class="c-date">2016-10-18</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./纪念册___三年之期_一生所系/index.html" target="_blank" rel="noopener">纪念册 | 三年之期，一生所系</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/JuPStK-aoQbp_yA6py_3Fg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">当年穿过一样的校服，考过一样的试卷，讲过一样的笑话，听过一样的教诲，这份情谊就永远都在。西工大给我们的，不仅仅是三年之期，更是一生所系……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="芬兰游记" data-title="芬兰回忆录 | 有一个地方">
+  <td class="c-date">2016-10-13</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./芬兰回忆录___有一个地方/index.html" target="_blank" rel="noopener">芬兰回忆录 | 有一个地方</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'芬兰游记')">芬兰游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/zWy_ggGBRUwgZ9Tjh6j-qw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">阳光和你都在，这就是我想要的未来……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="建筑设计" data-title="现代建筑考察 | 南锣鼓巷">
+  <td class="c-date">2016-10-05</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./现代建筑考察___南锣鼓巷/index.html" target="_blank" rel="noopener">现代建筑考察 | 南锣鼓巷</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/ARBJbUE-EBD7xNatqqwitA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">带着不同的目的，去到同一个地方，看到结果确是完全不一样。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="浙些年 | 一桌一梦，一室一生">
+  <td class="c-date">2016-10-02</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./浙些年___一桌一梦_一室一生/index.html" target="_blank" rel="noopener">浙些年 | 一桌一梦，一室一生</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/FBhoyr_4Uv8zwXalK2tz4w" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">一方简单的桌椅，见证了日日夜夜的付出，见证了点点滴滴对梦想的坚持。一间朴素的教室，就这样静静地陪我，在最美好的年华里为一生伏笔……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="芬兰游记" data-title="芬兰回忆录 | 别到处浪，好好上课">
+  <td class="c-date">2016-10-01</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./芬兰回忆录___别到处浪_好好上课/index.html" target="_blank" rel="noopener">芬兰回忆录 | 别到处浪，好好上课</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'芬兰游记')">芬兰游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/qyVUq5cexsjSS5CeW_xmXA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">其实就上了那么几节课，说学到什么改变一生的东西，那不可能。说不羡慕，也是假的。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="芬兰游记" data-title="芬兰回忆录 | 别到处浪，好好上课">
+  <td class="c-date">2016-09-30</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./芬兰回忆录___别到处浪_好好上课/index.html" target="_blank" rel="noopener">芬兰回忆录 | 别到处浪，好好上课</a><span class="tag" onclick="filterTag(this,'芬兰游记')">芬兰游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/wDIKflki7d9pnD4RRV9NUw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">其实就上了那么几节课，说学到什么改变一生的东西，那不可能。说不羡慕，也是假的。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="随笔 | 红色斗篷">
+  <td class="c-date">2016-09-29</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___红色斗篷/index.html" target="_blank" rel="noopener">随笔 | 红色斗篷</a><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/C-elcpRewMXQSYFomNPikg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我家的老屋依然空在荒草里，如同年迈的老人空在时间的流里。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="建筑设计" data-title="现代建筑考察 | 国家大剧院">
+  <td class="c-date">2016-09-24</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./现代建筑考察___国家大剧院/index.html" target="_blank" rel="noopener">现代建筑考察 | 国家大剧院</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/DnC4109fsDEjcRuUuLDFPQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">大剧院代表了一个时代的结束与另一个新的时代的开始。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="浙些年 | 渐行渐缓">
+  <td class="c-date">2016-09-23</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./浙些年___渐行渐缓/index.html" target="_blank" rel="noopener">浙些年 | 渐行渐缓</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/cEHKF3nwoCSnzcK6XWl7zw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">一个人成熟的过程应该是一个渐行渐缓的旅途。越走，越步调稳健，越走，越云淡风轻。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="浙些年 | 伏笔">
+  <td class="c-date">2016-09-16</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./浙些年___伏笔/index.html" target="_blank" rel="noopener">浙些年 | 伏笔</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/950mUvoIv9ufF6iy2Rh6-w" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">如果可以，我愿意画更长的时间慢慢伏笔。学习有技巧，有方法，却唯独没有捷径，根基不牢的空中楼阁，终究经不住大浪淘沙。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="浙些年 | 毕业之前">
+  <td class="c-date">2016-09-13</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./浙些年___毕业之前/index.html" target="_blank" rel="noopener">浙些年 | 毕业之前</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/YGNGMTfw_GBd4jBamlF4Mw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">等到顺利毕业的那天，这就是我送给自己的毕业礼物，是唱给自己的毕业歌，也是对风风雨雨却灿若星辰的年华，最好的注脚。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="芬兰游记" data-title="芬兰回忆录 | 努克西奥森林公园">
+  <td class="c-date">2016-09-12</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./芬兰回忆录___努克西奥森林公园/index.html" target="_blank" rel="noopener">芬兰回忆录 | 努克西奥森林公园</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'芬兰游记')">芬兰游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/u7PPWXxvwCfbBcK_eL0d1g" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">那是我第一次真正深入到森林腹地，感受到一种原始的，由泥土和阳光催生出来的生命力。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="芬兰游记" data-title="芬兰回忆录 | 北方以北——罗瓦涅米">
+  <td class="c-date">2016-09-04</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./芬兰回忆录___北方以北__罗瓦涅米/index.html" target="_blank" rel="noopener">芬兰回忆录 | 北方以北——罗瓦涅米</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'芬兰游记')">芬兰游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/6HZVk75MYwt5mvlcpPxWDA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我思来想去，这芬兰回忆录，还是要从罗瓦涅米（Rovaniemi）讲起。这个地方最冷，最北，也最静。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="芬兰游记" data-title="芬兰回忆录——起笔">
+  <td class="c-date">2016-08-30</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./芬兰回忆录__起笔/index.html" target="_blank" rel="noopener">芬兰回忆录——起笔</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'芬兰游记')">芬兰游记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/_YdLqhmQYfozYBWzMz4Ywg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">人的记忆会随着时间的流逝慢慢褪色，当时的笔记和事后的回忆各有各的好。随时记下的日记饱含了更多的细节和情绪，而隔着一段时间的回忆却有着别样的冷静和隽永。我就这样随意地记着，只愿多年以后回头来看，可以有东西咀嚼，有点滴回味。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="随笔 | 你且，住下">
+  <td class="c-date">2016-08-21</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___你且_住下/index.html" target="_blank" rel="noopener">随笔 | 你且，住下</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/tv0tRuvY4qOyfsJw34m39g" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">若是你想真正了解一座城市，一个地方，那你且住下，时间会告诉你一切。无须多言……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="随笔 | 白璧微瑕">
+  <td class="c-date">2016-08-15</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___白璧微瑕/index.html" target="_blank" rel="noopener">随笔 | 白璧微瑕</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/P-ql8ljLh0s8icltafWUSg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">有个成语叫“白璧微瑕”，之前总感觉是贬义，带着遗憾与慨叹。可若是白壁，微瑕又何妨。如果有人用白璧微瑕来形容你，你该觉得欣喜和满足，这是包含着欣赏与客观的最恰如其分的词。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="随笔 | 等">
+  <td class="c-date">2016-08-09</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔___等/index.html" target="_blank" rel="noopener">随笔 | 等</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/5lig9x6kLj2zhpbIfxcW2w" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">那是一半与另一半的刚刚好，是一颗心与另一颗心的千千结，是兜兜转转，尤似初见，是书向鸿笺，素年锦时。是“若有知音见采，不辞遍唱阳春”……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="随笔|花园">
+  <td class="c-date">2016-08-08</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔_花园/index.html" target="_blank" rel="noopener">随笔|花园</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/1MQvdpCrkCgVWl61r0zc5g" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">心性变了，文风自然会变，无意间流露出来的东西最不会骗人。以前的字句是再也写不出来了。且回头看看，留作纪念吧。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="建筑设计" data-title="守得云开见月明 | 漫谈建筑设计中的困惑">
+  <td class="c-date">2016-07-24</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./守得云开见月明___漫谈建筑设计中的困惑/index.html" target="_blank" rel="noopener">守得云开见月明 | 漫谈建筑设计中的困惑</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/80ofeOfY9mTcdkCAsxfq_A" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">对每个人来说，不管何时，不管学什么，只要在思考，就一定会困惑，不知，不解，不结束，本就是人生常态。困惑是云雾，但我们终究会守得云开见月明。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="海棠花又开，知是故人来">
+  <td class="c-date">2016-07-21</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./海棠花又开_知是故人来/index.html" target="_blank" rel="noopener">海棠花又开，知是故人来</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/ZxSx0eSqLXMH9EovavbgZA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">没有过多的话，我知道你会来找我，我也知道我们还会再见。因为我也会穿越千里万里，不为其他，只为见你。就像一个承诺，就像一年一年，海棠花开。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="随笔|恕不远送">
+  <td class="c-date">2016-07-05</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./随笔_恕不远送/index.html" target="_blank" rel="noopener">随笔|恕不远送</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/pTE9TElDVpGeAKKyAhwOxg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">送别的话有很多，像什么万望珍重，勿忘初心。可我觉得“恕不远送”最好。你有你的去处，他有他的生活。我也只能陪到这里，便也不落遗憾。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="杂文|越自制，越自由">
+  <td class="c-date">2016-06-26</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./杂文_越自制_越自由/index.html" target="_blank" rel="noopener">杂文|越自制，越自由</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/vHv1AuxNBOcNE8WLXzFfaw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">这个世界就是这样，你给自己的限制越少，受到来自外界的桎梏就会越多。但自制不是禁欲，更不是刻板。自制的本意也从来不是“吃得苦中苦，方为人上人”。它是不争，不比，是知道自己想做什么，该做什么，能做什么，能做成什么。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="红 | 第二十三个生日送出的第一份礼物">
+  <td class="c-date">2016-06-12</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./红___第二十三个生日送出的第一份礼物/index.html" target="_blank" rel="noopener">红 | 第二十三个生日送出的第一份礼物</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/46p6J6-8i2GpR7frC60IUQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">凭借自己有限的能力，我许不了父母年年月月锦衣玉食，华屋美服。更许不了时时刻刻承欢膝下，端茶送水。唯一能许的是“一世长安”。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="建筑设计" data-title="写给h老师的一封信">
+  <td class="c-date">2016-06-10</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./写给H老师的一封信/index.html" target="_blank" rel="noopener">写给H老师的一封信</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/8BaoTfHic1cS9AbFdCOacA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我觉得没想好并不可怕，可怕的是自始至终都不知道自己到底在做什么，到底想要什么，我们要解决的问题核心是什么，重点在哪里？</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="小说|再读《雨生》">
+  <td class="c-date">2016-06-02</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./小说_再读_雨生_/index.html" target="_blank" rel="noopener">小说|再读《雨生》</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/yltIqYGcjSXH8YI1On2-XA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">那些没有说的事，没有表达的感觉，没有透露的想法，没有出场的人物，才是真正的自我，真正的生活和心灵。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="读书笔记" data-title="莫逆于心 |《查令街十字84号》读后感">
+  <td class="c-date">2016-05-08</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./莫逆于心___查令街十字84号_读后感/index.html" target="_blank" rel="noopener">莫逆于心 |《查令街十字84号》读后感</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'读书笔记')">读书笔记</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/H1_-g71mWeIAPgybbSxevg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">至少，你知道，这个世界上真的有一种感情，莫逆于心。即使自己从来都不曾拥有……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="杂文|玫瑰手霜">
+  <td class="c-date">2016-05-01</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./杂文_玫瑰手霜/index.html" target="_blank" rel="noopener">杂文|玫瑰手霜</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/8cc6S_Z82J32iDLCsjkbCA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">其实我不怕疼，只是怕留下疤痕。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="建筑设计" data-title="作品集|大师工作室">
+  <td class="c-date">2016-04-24</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./作品集_大师工作室/index.html" target="_blank" rel="noopener">作品集|大师工作室</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/niHbo76SN0_e3nO23y-wYQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">现在最不怕丢的就是丢人了，虽然以前的东西很渣，但拿出来看看，无妨……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="小说|北方的星星">
+  <td class="c-date">2016-04-21</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./小说_北方的星星/index.html" target="_blank" rel="noopener">小说|北方的星星</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/crzjBt33W9snRmpYU9WAlg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">想要写出好的故事，必得是有故事之人，而想要成为有故事的人，首先要是个会哭会笑的人，这样，当你失去一切，你还有自己，还有一颗永不麻木的心。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="建筑设计" data-title="笔尖|建筑表现">
+  <td class="c-date">2016-04-18</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./笔尖_建筑表现/index.html" target="_blank" rel="noopener">笔尖|建筑表现</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/uiOAjy3Obuq9huPXzG9yEQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">生活是平淡的，太多求而不得，太多得而无感。想要诗意的活着，首先要知道什么是生活，所以必须借由某种媒介，去经历与体会，回味与参悟，去填充时间，同时沉淀心绪。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="建筑设计" data-title="定格|人间四月天——玉华村茶厂调研">
+  <td class="c-date">2016-04-11</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./定格_人间四月天__玉华村茶厂调研/index.html" target="_blank" rel="noopener">定格|人间四月天——玉华村茶厂调研</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/Bb_jq5idO2qCpDb5vMF2_w" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">在二十几岁的年华里
+有你有我，有笑有泪
+当我转身
+或许突然间忘了春天的样子
+但幸好，我还记得你们的笑
+和自己的傻……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="杂文|孤城">
+  <td class="c-date">2016-04-02</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./杂文_孤城/index.html" target="_blank" rel="noopener">杂文|孤城</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/Bs7KZDIFETIiSlxlIIY-GA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">当最热烈的爱受到创伤而返诸自身时，人在孤独中学会了爱自己，也学会了理解别的孤独的心灵和深藏在那些心灵中的深邃的爱，从而体味到一种超越的幸福。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="杂文|学车记">
+  <td class="c-date">2016-03-24</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./杂文_学车记/index.html" target="_blank" rel="noopener">杂文|学车记</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/rD5BPMhjqafysDZZo8Z5Qg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">有一个父亲曾经告诉自己的女儿，将来长大一定要学会开车。这样你就可以更容易地去你想去的地方，见你想见的人，做你想做的事。你会有更大的世界和更广的天地，也就有了海阔天空的胸怀和风雨不动的平和……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="散文|久在樊笼">
+  <td class="c-date">2016-03-23</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./散文_久在樊笼/index.html" target="_blank" rel="noopener">散文|久在樊笼</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/OIBAgHGkS4ZzrG6OLjHtQw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">若不让自己也成为美丽的事物，有怎么有资格去接近，去追求美呢？</div>
+  </td>
+</tr><tr data-year="2016" data-tags="建筑设计" data-title="笔尖|素描">
+  <td class="c-date">2016-03-02</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./笔尖_素描/index.html" target="_blank" rel="noopener">笔尖|素描</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/gZShYbx-DbqA2NXWaNJrQw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">真的很怀念那个时候，可以一整天不想任何事情，就从清晨画到太阳落山，站起来的时候，才发现脚麻了。然后抖一抖衣服上的铅笔屑，回去好好洗个热水澡，安心睡觉。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="籽言|五瓣花">
+  <td class="c-date">2016-02-29</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./籽言_五瓣花/index.html" target="_blank" rel="noopener">籽言|五瓣花</a><span class="badge-orig">原创</span><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/DqDjjRKSW4wSp6XDfD4tWQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">今天是2月29日，下一次再遇见这个日子，要等到四年以后了。四年足以改变很多。但有些事，有些人，有些习惯，兜兜转转，尤似初见。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="籽言|不归雁">
+  <td class="c-date">2016-02-28</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./籽言_不归雁/index.html" target="_blank" rel="noopener">籽言|不归雁</a><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/anrJR75fZ45hzkN9oiT5Pw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">大雁在飞的时候，应该知道自己要去向何方吧，而我却不知道。在这样漫长，这样漫长的夜里，只有窗外摇晃的树影和树影后面圆圆的月。隔着这样远的时间和空间，当我快要睡去的时候，他们也该起床了吧……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="建筑设计" data-title="笔尖|江西速写">
+  <td class="c-date">2016-02-25</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./笔尖_江西速写/index.html" target="_blank" rel="noopener">笔尖|江西速写</a><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/kYM5WIE4-OgXl9hmI7G3hQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">一双眼，除了追美剧，看美女，还可以看这世间最美的风景；
+一双手，除了水手机，发微信，还可以画这天地最纯的瞬间。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="籽言|风水">
+  <td class="c-date">2016-02-23</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./籽言_风水/index.html" target="_blank" rel="noopener">籽言|风水</a><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/bbv4mqqdSIqVNJ2UADI0dA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">的确，在历史上，非科学时代要比科学时代漫长的多，不能因为拥有了科学，就用科学去衡量和否定原来所有的东西。平心而论，将风水视为美学或许比视为科学更为妥帖，甚至可以看做一种文化。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="建筑设计" data-title="定格|一条摄影的不归路">
+  <td class="c-date">2016-02-21</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./定格_一条摄影的不归路/index.html" target="_blank" rel="noopener">定格|一条摄影的不归路</a><span class="tag" onclick="filterTag(this,'建筑设计')">建筑设计</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/wGdEt4JeA_QInUy41jhg7w" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">再暗淡的生活，总有感动，总有惊喜，总有远行的理由，总有微笑的借口……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="冬衣">
+  <td class="c-date">2016-02-20</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./冬衣/index.html" target="_blank" rel="noopener">冬衣</a><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/ZDaUA9Ug-PQ6IBBhC7R_kA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">无意间翻看了以前的日记，发现自己真的很喜欢用两个字的题目。在我看来，两个字就足以表达大部分的见闻和心意，无需多言，比如日出、日落；比如春雨、秋风；比如欢喜、忧伤；比如相遇、离去。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="籽言|葛生">
+  <td class="c-date">2016-02-17</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./籽言_葛生/index.html" target="_blank" rel="noopener">籽言|葛生</a><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/fl1LU8t9hXGgvkFjzB8TmQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">一夜曲沃烟雨下 一夜天净沙
+一夜许君满穴室 一夜葛生花
+一夜碧落或黄泉 茫茫两无话
+一夜飞雪生天际 白蔹染千家</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="笔者小传">
+  <td class="c-date">2016-02-16</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./笔者小传/index.html" target="_blank" rel="noopener">笔者小传</a><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/Mcz5QBam3gLH2mrCwY7E-A" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">此生，不期有万钟千金之富，惊天动地之举，翻云覆雨之权，但求知己两三，与游高山流水，品论今古；得一良人，相鼓琴瑟合音，成全永好。</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="不好意思，大你半岁">
+  <td class="c-date">2016-02-10</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./不好意思_大你半岁/index.html" target="_blank" rel="noopener">不好意思，大你半岁</a><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/NBSugEdv9T2IFDvjfDyicA" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">再过十年，我们都会有自己的家庭，但我不会忘记，你我都小的时候，一个被窝睡觉，一个盆里洗脚，我抢过你的遥控器，你用过我的水彩笔……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="给初中学弟学妹的15条建议">
+  <td class="c-date">2016-02-06</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./给初中学弟学妹的15条建议/index.html" target="_blank" rel="noopener">给初中学弟学妹的15条建议</a><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/YWz50yEocIaXJ9Z77Xep7A" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">你除了是学生，还是子女，是朋友，是兄弟姐妹。除了学习，还要去旅行，去珍惜，去爱。不要让自己在反反复复的考试中变得麻木，而是要从简单的重复保持一颗赤子之心……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="洗衣">
+  <td class="c-date">2016-02-04</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./洗衣/index.html" target="_blank" rel="noopener">洗衣</a><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/unnRnuUOllh_DGrC0PCdTg" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">如果十年以后，二十年以后，或者三五十年以后，人们再也不用，也不想到河边洗衣了，那我在二零一六年立春拍的这些图片就会成为孤本，多年以后，被死死锁在博物馆的玻璃后面，成为永远的历史……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="繁华">
+  <td class="c-date">2016-02-03</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./繁华/index.html" target="_blank" rel="noopener">繁华</a><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/pCqidFhIbLBmowhGpQOGng" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">我用了很久的时间，还是分不清繁华和热闹。但有一点不会错，真正盛大的繁华背后，一定是宁静，就像真正伟大的成就背后，一定是胸怀……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="滋味">
+  <td class="c-date">2016-02-02</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./滋味/index.html" target="_blank" rel="noopener">滋味</a><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/iCw0_9aHOBs9cKH01rueDw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">有一天，我可以给年迈的父母炖一锅鸡汤，给辛劳的丈夫煮一碗咸粥，给贪嘴的孩子蒸一杯蛋羹，也给自己烧一碟简简单单的却又永远吃不厌的土豆丝，那便是生活这场戏里最舒心的脚本，是工作、金钱、名誉之间的点缀，也是失望、心酸、麻木、焦灼之后的温情脉脉……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="守巢">
+  <td class="c-date">2016-02-01</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./守巢/index.html" target="_blank" rel="noopener">守巢</a><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/VL7FbcU_sOW6sjyMNT3pkw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">这是一场与时间的战争，没有人会赢。既然赢不了，就要输的坦然。输给时间并不丢人，丢人的是输给自己的耐心……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="芬兰游记" data-title="第59次到赫尔辛基">
+  <td class="c-date">2016-01-31</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./第59次到赫尔辛基/index.html" target="_blank" rel="noopener">第59次到赫尔辛基</a><span class="tag" onclick="filterTag(this,'其他')">其他</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/Hr6t2TI0DwqTu2r517vJxQ" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">多年以后，你陪我在繁忙的集市广场再买一杯Glogi吧，我们靠着街角的雕像，在夕阳中眺望缓缓驶向芬兰堡的游船。远处是绚烂的天空和天空下永远自由的海鸟……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="不动声色">
+  <td class="c-date">2016-01-30</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./不动声色/index.html" target="_blank" rel="noopener">不动声色</a><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/gO9NXtg80fZBiGKQmYhLHw" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">得到了想得到的，失去了不想失去的，错过了本该珍惜的，浪费了不应浪费的。而我，只能一如既往的不动声色……</div>
+  </td>
+</tr><tr data-year="2016" data-tags="随笔杂文" data-title="一则童话">
+  <td class="c-date">2016-01-29</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./一则童话/index.html" target="_blank" rel="noopener">一则童话</a><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/_rZR67u0Jc2ZQCeZS13X4Q" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">生活又何尝不是这样，同样的故事，对于我是惊涛骇浪，生死相随，而于你却是风吹黄叶，如此而已……</div>
+  </td>
+</tr><tr data-year="2015" data-tags="随笔杂文" data-title="雨生">
+  <td class="c-date">2015-11-09</td>
+  <td class="c-main">
+    <div class="title-row"><a class="art-title" href="./雨生/index.html" target="_blank" rel="noopener">雨生</a><span class="tag" onclick="filterTag(this,'随笔杂文')">随笔杂文</span><div class="orig-link"><a href="https://mp.weixin.qq.com/s/OULqoGarO_736jNj9YR8_Q" target="_blank" rel="noopener">阅读原文</a></div></div>
+    <div class="art-digest">一个人，一条回家的路，现在只有沉默，沉默……</div>
+  </td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="ftr">
+  <a href="https://www.zkpunk.pro/" target="_blank">ZKPunk</a>
+</div>
+
+<script>
+let curYear = '', curTag = '';
+
+function filterYear(btn, y) {
+  document.querySelectorAll('.yr-btn').forEach(b => b.classList.remove('on'));
+  document.getElementById('yrAll').classList.remove('on');
+  if (curYear === y) { curYear = ''; document.getElementById('yrAll').classList.add('on'); }
+  else { curYear = y; btn.classList.add('on'); }
+  apply();
+}
+
+function goHome() {
+  curYear = ''; curTag = '';
+  document.getElementById('q').value = '';
+  document.querySelectorAll('.yr-btn').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('on'));
+  document.getElementById('yrAll').classList.add('on');
+  document.getElementById('tagAll').classList.add('on');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  apply();
+}
+
+function clearYear(btn) {
+  curYear = '';
+  document.querySelectorAll('.yr-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  apply();
+}
+
+function clearTag(btn) {
+  curTag = '';
+  document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  apply();
+}
+
+function filterTag(btn, t) {
+  document.getElementById('tagAll').classList.remove('on');
+  if (curTag === t) {
+    curTag = '';
+    document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('on'));
+    document.getElementById('tagAll').classList.add('on');
+  } else {
+    curTag = t;
+    document.querySelectorAll('.tag-btn').forEach(b => {
+      if (b.textContent.trim().startsWith(t)) { b.classList.add('on'); }
+      else { b.classList.remove('on'); }
+    });
+  }
+  apply();
+}
+
+let isLight = false;
+function toggleTheme() {
+  isLight = !isLight;
+  document.body.classList.toggle('light', isLight);
+  document.getElementById('iconMoon').style.display = isLight ? 'none' : '';
+  document.getElementById('iconSun').style.display  = isLight ? '' : 'none';
+}
+
+let sortAsc = false;
+function toggleSort() {
+  sortAsc = !sortAsc;
+  document.getElementById('sortArrow').textContent = sortAsc ? '↑' : '↓';
+  const tbody = document.getElementById('lst');
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  rows.sort((a, b) => {
+    const da = a.querySelector('.c-date')?.textContent.trim() || '';
+    const db = b.querySelector('.c-date')?.textContent.trim() || '';
+    return sortAsc ? da.localeCompare(db) : db.localeCompare(da);
+  });
+  rows.forEach(r => tbody.appendChild(r));
+}
+
+function apply() {
+  const q = document.getElementById('q').value.toLowerCase();
+  const rows = document.querySelectorAll('#lst tr');
+  let n = 0;
+  rows.forEach(r => {
+    const y = r.dataset.year;
+    const tags = r.dataset.tags;
+    const title = r.dataset.title;
+    const digest = r.querySelector('.art-digest')?.textContent.toLowerCase() || '';
+    const mY = !curYear || y === curYear;
+    const mT = !curTag || tags.split(',').some(t => t.trim() === curTag);
+    const mQ = !q || title.includes(q) || digest.includes(q);
+    if (mY && mT && mQ) { r.classList.remove('hidden'); n++; }
+    else { r.classList.add('hidden'); }
+  });
+  document.getElementById('cnt').textContent = n + ' / 260';
+}
+apply();
+</script>
+</body>
+</html>
